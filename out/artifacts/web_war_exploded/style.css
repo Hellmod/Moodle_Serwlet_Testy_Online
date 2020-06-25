@@ -1,0 +1,269 @@
+@charset "UTF-8";
+
+body{
+//background: black;
+}
+
+*{
+    opacity: 0.98;
+}
+
+#kontener{
+    margin: auto;
+    font-family: "Rahoma","sans-serif";
+    font-size: 10pt;
+    width: 90%;
+}
+
+#naglowek{
+    background: #ccc;
+    text-align: center;
+    height: 150px;
+    font-size: 200%;
+}
+
+#naglowek h1{
+    margin: 0px;
+    padding: 35px;
+}
+
+#srodek{
+    margin-top: 10px;
+    text-align: center;
+}
+
+#menu{
+    float: left;
+    width: 150px;
+    /* background: #999; */
+    margin-bottom: 10px;
+}
+
+#menu ul{
+    margin: 0px;
+    padding: 0px;
+}
+
+#menu ul li{
+    list-style: none;
+    font-size: 90%;
+}
+
+#menu a{
+    text-decoration: none;
+    color: black;
+    background: #eee;
+    text-align: center;
+    margin-bottom: 5px ;
+    padding: 4px;
+    display: block;
+    transition: all 0.5s ease-in-out;
+}
+
+#menu a:hover{
+    color: white;
+    background: #888;
+}
+
+#burger{
+    width: 0px;
+    height: 0px;
+}
+
+#newsy{
+    float: right;
+    background: #ddd;
+    padding: 0 5px 5px  ;
+    width: 170px;
+}
+
+#newsy p{
+    background: #eee;
+    border: solid 1px black;
+}
+
+#tresc{
+    float: left;
+    background: #ccc;
+    min-height: 100px;
+    padding: 5px;
+    text-align: justify;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    /*margin-left: 170px;*/
+    width: calc(100% - 360px);
+
+
+}
+#stopka{
+    clear:both;
+    background: #888;
+    color: white;
+    text-align: center;
+    padding: 3px;
+}
+
+@media only screen and (max-width: 600px){
+    html{
+        /* background: blue; */
+    }
+
+    #menu{
+        width: 100%;
+        padding: 0px;
+    }
+
+    #newsy{
+        text-align: center;
+    }
+
+    #tresc{
+        clear: both;
+        width: 100%;
+        padding: 0px;
+    }
+
+    #kontener{
+        min-width: 320px;
+    }
+
+}
+/*--------------------------------*/
+#menuToggle
+{
+    display: block;
+    position: relative;
+
+    z-index: 1;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+}
+
+
+#menuToggle input
+{
+
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    width: 40px;
+    height: 32px;
+    position: absolute;
+    top: -7px;
+    left: -5px;
+
+    cursor: pointer;
+
+    opacity: 0; /* hide this */
+    z-index: 2; /* and place it over the hamburger */
+
+    -webkit-touch-callout: none;
+}
+
+/*
+ * Just a quick hamburger
+ */
+#menuToggle span
+{
+    top:-40px;
+
+    visibility: hidden;
+    display: none;
+    margin-right: auto;
+    margin-left: auto;
+    width: 33px;
+    height: 4px;
+    margin-bottom: 5px;
+    position: relative;
+
+    background: #cdcdcd;
+    border-radius: 3px;
+
+    z-index: 1;
+
+    transform-origin: 4px 0px;
+
+    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+    background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+    opacity 0.55s ease;
+}
+
+#menuToggle span:first-child
+{
+    transform-origin: 0% 0%;
+}
+
+#menuToggle span:nth-last-child(2)
+{
+    transform-origin: 0% 100%;
+}
+
+/*
+ * Transform all the slices of hamburger
+ * into a crossmark.
+ */
+#menuToggle input:checked ~ span
+{
+    opacity: 1;
+    transform: rotate(45deg) translate(-2px, -1px);
+    background: #232323;
+}
+
+/*
+ * But let's hide the middle one.
+ */
+#menuToggle input:checked ~ span:nth-last-child(3)
+{
+    opacity: 0;
+    transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+/*
+ * Ohyeah and the last one should go the other direction
+ */
+#menuToggle input:checked ~ span:nth-last-child(2)
+{
+    transform: rotate(-45deg) translate(0, -1px);
+}
+
+
+
+@media only screen and (max-width: 500px){
+    #burger{
+        margin: auto;
+        width: 50px;
+        height: 50px;
+        visibility: visible;
+    }
+
+    #menuToggle span
+    {
+        visibility: visible;
+        display: block;
+    }
+    #menuToggle input
+    {
+        position: relative;
+    }
+
+    #menu ul{
+        display: none;
+
+    }
+    #menu{
+        position: relative;
+        top:-40px;
+    }
+
+    #tresc{
+        position: relative;
+        top:-40px;
+    }
+
+    #menuToggle input:checked ~#menu ul{
+        display: block;
+    }
+}
