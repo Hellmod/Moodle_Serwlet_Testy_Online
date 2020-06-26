@@ -14,6 +14,7 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="jstl:jstl:1.2" />
+          <element id="library" level="project" name="sqlite-jdbc-3.23.1" />
         </element>
       </element>
     </root>

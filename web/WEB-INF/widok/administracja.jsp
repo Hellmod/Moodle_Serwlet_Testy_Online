@@ -1,4 +1,4 @@
-<%@page import="ti.Narzedzia, ti.model.RMuzytkownik,ti.model.Baza2" %>
+<%@page import="ti.Narzedzia, ti.model.User,ti.model.Baza2" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <form action="RM?akcja=kolor" method="post">

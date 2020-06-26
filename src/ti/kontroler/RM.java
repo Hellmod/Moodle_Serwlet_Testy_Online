@@ -1,8 +1,9 @@
 package ti.kontroler;
 
 import ti.Narzedzia;
+import ti.model.Baza;
 import ti.model.Baza2;
-import ti.model.RMuzytkownik;
+import ti.model.User;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -36,34 +37,47 @@ public class RM extends HttpServlet {
         if (akcja == null) akcja ="";
 
 
-        RMuzytkownik uzytkownik = (RMuzytkownik) sesja.getAttribute("uzytkownik");
+        User uzytkownik = (User) sesja.getAttribute("uzytkownik");
         if (uzytkownik == null) {
-            uzytkownik = new RMuzytkownik();   // użytkownik
+            uzytkownik = new User();   // użytkownik
             sesja.setAttribute("uzytkownik", uzytkownik);
         }
 
-        Baza2 baza = (Baza2)context.getAttribute("baza");
-        if (baza == null) {
-            baza = new Baza2();
-            context.setAttribute("baza", baza);
+        User user = (User) sesja.getAttribute("user");
+        if (user == null) {
+            user = new User();   // użytkownik
+            sesja.setAttribute("user", user);
         }
 
+        Baza2 baza2 = (Baza2)context.getAttribute("baza");
+        if (baza2 == null) {
+            baza2 = new Baza2();
+            context.setAttribute("baza", baza2);
+        }
 
-
-
-
-
-
+        Baza baza = new Baza();
+/*
+        Baza baza = (Baza)context.getAttribute("baza2");
+        if (baza == null) {
+            baza = new Baza();
+            context.setAttribute("baza2", baza);
+        }
+*/
         if(akcja.equals("login")) {
 
             String login=request.getParameter("log");
             String haslo=request.getParameter("pass");
-            RMuzytkownik temp = baza.zalogujUzytkownika2(login,haslo);
+            //User temp = baza.selectUser(login,haslo);
+            User temp = baza.test();
+            //RMuzytkownik temp = baza2.zalogujUzytkownika2(login,haslo);
             komunikat = "Zostałeś prawidłowo zalogowany";
             if(temp !=null) {
-                if(temp.getUprawnienia()!=-2){
+                if(temp.getPermissions()!=-2){
                     sesja.setAttribute("uzytkownik", temp);
-                    uzytkownik=temp;
+                    user=temp;
+                    //uzytkownik=temp;
+
+                }else {
                     komunikat = "Konto zablokowane!";
                 }
 
@@ -82,12 +96,6 @@ public class RM extends HttpServlet {
             if(imie==null) imie="";
             if(nazwisko==null) nazwisko="";
 
-            int wiek = Narzedzia.parsujInteger(request.getParameter("wiek"), -1);
-
-            uzytkownik.setImie(imie);
-            uzytkownik.setNazwisko(nazwisko);
-            uzytkownik.setWiek(wiek);
-
             sesja.setAttribute("uzytkownik", uzytkownik);
             //System.out.println(sesja.getAttribute("uzytkownik"));
 
@@ -105,15 +113,15 @@ public class RM extends HttpServlet {
             if(uprawnienia==null) uprawnienia="-1";
 
             if(!login.equals("admin")) {
-                baza.nadajUprawnienia(login, Integer.parseInt(uprawnienia));
-                context.setAttribute("baza", baza);
+                baza2.nadajUprawnienia(login, Integer.parseInt(uprawnienia));
+                context.setAttribute("baza", baza2);
                 komunikat = "Zmieniono dane";
             }
 
 
         }
         else if(akcja.equals("wyloguj")) {
-            sesja.setAttribute("uzytkownik", new RMuzytkownik());
+            sesja.setAttribute("uzytkownik", new User());
             komunikat = "Zostałeś prawidłowo wylogowany";
          //   response.sendRedirect("index.jsp");
         }
@@ -121,22 +129,22 @@ public class RM extends HttpServlet {
             String login=request.getParameter("log");
             String haslo=request.getParameter("pass");
             komunikat = "Taki login już istnijej !";
-            if(baza.pobierzUzytkownika(login)==null){
-                baza.dodajUzytkownika(login,haslo,0);
-                context.setAttribute("baza", baza);
+            if(baza2.pobierzUzytkownika(login)==null){
+                baza2.dodajUzytkownika(login,haslo,0);
+                context.setAttribute("baza", baza2);
                 komunikat = "Poprawnie zarejestrowano";
             }
         } else if (akcja.equals("usun")) {
             String login = request.getParameter("login");
-            baza.usunUzytkownika(login);
-            context.setAttribute("baza", baza);
+            baza2.usunUzytkownika(login);
+            context.setAttribute("baza", baza2);
             komunikat = "Usunięto "+login;
 
         }
         else if(akcja.equals("zablokuj")){
             String login = request.getParameter("login");
-            baza.nadajUprawnienia(login,-2);
-            context.setAttribute("baza", baza);
+            baza2.nadajUprawnienia(login,-2);
+            context.setAttribute("baza", baza2);
             komunikat = "Zablokowano"+login;
         }
 

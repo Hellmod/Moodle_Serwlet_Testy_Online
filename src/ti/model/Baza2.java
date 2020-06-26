@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Baza2 {
-    private HashMap<String, RMuzytkownik> uzytkownicy = new HashMap<>();
+    private HashMap<String, User> uzytkownicy = new HashMap<>();
 
     public Baza2(){
         dodajUzytkownika("user","123",0);
@@ -12,17 +12,17 @@ public class Baza2 {
         dodajUzytkownika("admin","123",2);
     }
 
-    public RMuzytkownik[] getTab(){
+    public User[] getTab(){
 
         return null;
     }
 
     public void dodajUzytkownika(String login, String haslo, int uprawnienia){
-        uzytkownicy.put(login,new RMuzytkownik(login,haslo,uprawnienia));
+        uzytkownicy.put(login,new User(login,haslo,uprawnienia));
     }
 
     public void ustawKolor(String login, String kolor){
-        RMuzytkownik uzytkownik = uzytkownicy.get(login);
+        User uzytkownik = uzytkownicy.get(login);
         uzytkownicy.remove(login);
         uzytkownicy.put(login,uzytkownik);
     }
@@ -31,33 +31,33 @@ public class Baza2 {
         uzytkownicy.remove(login);
     }
 
-    public RMuzytkownik pobierzUzytkownika(String login){
+    public User pobierzUzytkownika(String login){
         return uzytkownicy.get(login);
     }
 
     public void nadajUprawnienia(String login, int uprawnienia){
-        RMuzytkownik uzytkownik = uzytkownicy.get(login);
-        uzytkownik.setUprawnienia(uprawnienia);
+        User uzytkownik = uzytkownicy.get(login);
+        uzytkownik.setPermissions(uprawnienia);
         uzytkownicy.remove(login);
         uzytkownicy.put(login,uzytkownik);
     }
 
     public int zalogujUzytkownika(String login, String haslo){
         int wynik =-1;
-        RMuzytkownik uzytkonik = uzytkownicy.get(login);
+        User uzytkonik = uzytkownicy.get(login);
         if(uzytkonik !=null){
-            if(uzytkonik.getHaslo().equals(haslo))
-                wynik=uzytkonik.getUprawnienia();
+            if(uzytkonik.getPassword().equals(haslo))
+                wynik=uzytkonik.getPermissions();
         }
         return wynik;
     }
 
-    public RMuzytkownik zalogujUzytkownika2(String login, String haslo){
+    public User zalogujUzytkownika2(String login, String haslo){
         int wynik =-1;
-        RMuzytkownik uzytkonik = uzytkownicy.get(login);
+        User uzytkonik = uzytkownicy.get(login);
         if(uzytkonik !=null){
-            if(uzytkonik.getHaslo().equals(haslo))
-                wynik=uzytkonik.getUprawnienia();
+            if(uzytkonik.getPassword().equals(haslo))
+                wynik=uzytkonik.getPermissions();
         }
         return uzytkonik;
     }
@@ -68,11 +68,11 @@ public class Baza2 {
         return wynik;
     }
 
-    public HashMap<String, RMuzytkownik> getUzytkownicy() {
+    public HashMap<String, User> getUzytkownicy() {
         return uzytkownicy;
     }
 
-    public void setUzytkownicy(HashMap<String, RMuzytkownik> uzytkownicy) {
+    public void setUzytkownicy(HashMap<String, User> uzytkownicy) {
         this.uzytkownicy = uzytkownicy;
     }
 }

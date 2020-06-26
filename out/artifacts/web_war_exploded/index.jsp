@@ -10,19 +10,14 @@
   <script type="text/javascript" src="skript/skrypt.js"></script>
   <script type="text/javascript" src="skript/kwadratowe.js"></script>
 </head>
-<style>
-  html{
-    background: [[KOLOR]];
-  }
-</style>
-<jsp:useBean id="uzytkownik" class="ti.model.RMuzytkownik" scope="session"/>
+<jsp:useBean id="uzytkownik" class="ti.model.User" scope="session"/>
 
 <% String strona = request.getParameter("strona");
-  if (uzytkownik.getUprawnienia()==0)
+  if (uzytkownik.getPermissions()==0)
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;");
-  else if (uzytkownik.getUprawnienia()==1)
+  else if (uzytkownik.getPermissions()==1)
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;");
-  else if (uzytkownik.getUprawnienia()==2)
+  else if (uzytkownik.getPermissions()==2)
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;administracja;");
   else
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;rejestracja;");
