@@ -11,8 +11,8 @@ public class BaseTest {
 
 
         //List<User> rekordy = b.selectUsers();
-        //User user = b.selectUser("as","123");
-        User user = b.test();
+        User user = b.selectUser("as","123");
+        //User user = b.test();
         System.out.println(user.getId()+" "+user.getLogin()+" "+user.getPassword()+" "+user.getPermissions());
 /*
         System.out.println("Lista uzytkowników:");

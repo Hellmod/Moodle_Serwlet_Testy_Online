@@ -55,19 +55,18 @@ public class Baza {
 			prepStmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Blad przy dodawaniu użytkownika");
+			System.err.println(e.getErrorCode());
 			return false;
 		}
 		return true;
 	}
 
 	public User selectUser(String login, String password) {
-		List<User> urzytkownicy = new LinkedList<User>();
 		User user=null;
 		try {
-			//PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM users where login=? and password=? ;");
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM users where login='as' and password='123' ;");
-			//prepStmt.setString(1, login);
-			//prepStmt.setString(2, password);
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM users where login=? and password=? ;");
+			prepStmt.setString(1, login);
+			prepStmt.setString(2, password);
 
 			ResultSet result = prepStmt.executeQuery();
 			if(result.next())
@@ -95,28 +94,6 @@ public class Baza {
 		return urzytkownicy;
 	}
 
-
-	public User test() {
-		User user=null;
-		try {
-			ResultSet result = stat.executeQuery("SELECT * FROM users");
-			int id;
-			String login, haslo;
-			if (result.next()) {
-				id = result.getInt("id");
-				login = result.getString("login");
-				haslo = result.getString("password");
-
-				user = new User(id, login, haslo,1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return user;
-	}
-
-
 	public void closeConnection() {
 		try {
 			conn.close();
@@ -125,4 +102,17 @@ public class Baza {
 			e.printStackTrace();
 		}
 	}
+
+    public boolean loginAvailable(String login) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM users where login=?");
+			prepStmt.setString(1, login);
+			ResultSet result = prepStmt.executeQuery();
+			if(result.next())
+				return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+    }
 }

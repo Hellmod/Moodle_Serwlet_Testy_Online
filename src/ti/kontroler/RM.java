@@ -67,26 +67,20 @@ public class RM extends HttpServlet {
 
             String login=request.getParameter("log");
             String haslo=request.getParameter("pass");
-            //User temp = baza.selectUser(login,haslo);
-            User temp = baza.test();
-            //RMuzytkownik temp = baza2.zalogujUzytkownika2(login,haslo);
+            User temp = baza.selectUser(login,haslo);
+
             komunikat = "Zostałeś prawidłowo zalogowany";
             if(temp !=null) {
                 if(temp.getPermissions()!=-2){
                     sesja.setAttribute("uzytkownik", temp);
                     user=temp;
-                    //uzytkownik=temp;
-
                 }else {
                     komunikat = "Konto zablokowane!";
                 }
-
             }
             else {
                 komunikat = "Błędny login lub hasło";
             }
-
-
         }
         else if(akcja.equals("ustawienia")){
             String imie = request.getParameter("imie");
@@ -103,7 +97,6 @@ public class RM extends HttpServlet {
            // response.sendRedirect("index.jsp");
 
         }
-
         else if(akcja.equals("uprawnienia")){
             String login = request.getParameter("login");
             String uprawnienia = request.getParameter("uprawnienia");
@@ -117,23 +110,23 @@ public class RM extends HttpServlet {
                 context.setAttribute("baza", baza2);
                 komunikat = "Zmieniono dane";
             }
-
-
         }
         else if(akcja.equals("wyloguj")) {
             sesja.setAttribute("uzytkownik", new User());
             komunikat = "Zostałeś prawidłowo wylogowany";
-         //   response.sendRedirect("index.jsp");
+       //   response.sendRedirect("index.jsp");
         }
         else if(akcja.equals("register")){
             String login=request.getParameter("log");
             String haslo=request.getParameter("pass");
-            komunikat = "Taki login już istnijej !";
-            if(baza2.pobierzUzytkownika(login)==null){
-                baza2.dodajUzytkownika(login,haslo,0);
-                context.setAttribute("baza", baza2);
-                komunikat = "Poprawnie zarejestrowano";
+            if(baza.loginAvailable(login)){
+                if(baza.insertUser(new User(login,haslo,-2)))
+                    komunikat = "Poprawnie zarejestrowano";
+                else
+                    komunikat = "Błąd podczas dodawania użytkownika skontatkurj się z amdinistartorem strony";
             }
+            else
+                komunikat = "Taki login już istnieje!";
         } else if (akcja.equals("usun")) {
             String login = request.getParameter("login");
             baza2.usunUzytkownika(login);
