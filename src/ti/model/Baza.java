@@ -34,6 +34,15 @@ public class Baza {
 		createTables();
 	}
 
+	public void closeConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			System.err.println("Problem z zamknieciem polaczenia");
+			e.printStackTrace();
+		}
+	}
+
 	public boolean createTables() {
 		String createUsers = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login varchar(255), password varchar(255), permissions int)";
 		try {
@@ -80,27 +89,36 @@ public class Baza {
 
 
 	public List<User> selectUsers() {
+		List<User> users = new LinkedList<User>();
+		try {
+			ResultSet result = stat.executeQuery("SELECT * FROM users");
+			while (result.next()) {
+				users.add(new User(result.getInt("id"), result.getString("login"), result.getString("password"), result.getInt("permissions")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return users;
+	}
+
+	public List<User> selectUzytkownik() {
 		List<User> urzytkownicy = new LinkedList<User>();
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM users ;");
-			ResultSet result = prepStmt.executeQuery();
+			ResultSet result = stat.executeQuery("SELECT * FROM users");
+			int id;
+			String login, haslo;
 			while (result.next()) {
-				urzytkownicy.add(new User(result.getInt("id"), result.getString("login"), result.getString("password"), result.getInt("permissions")));
+				id = result.getInt("id");
+				login = result.getString("login");
+				haslo = result.getString("password");
+				urzytkownicy.add(new User(id, login, haslo,-1));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
 		return urzytkownicy;
-	}
-
-	public void closeConnection() {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			System.err.println("Problem z zamknieciem polaczenia");
-			e.printStackTrace();
-		}
 	}
 
     public boolean loginAvailable(String login) {

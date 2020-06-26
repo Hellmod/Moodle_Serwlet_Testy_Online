@@ -55,14 +55,13 @@ public class RM extends HttpServlet {
             context.setAttribute("baza", baza2);
         }
 
-        Baza baza = new Baza();
-/*
+       // Baza baza = new Baza();
         Baza baza = (Baza)context.getAttribute("baza2");
         if (baza == null) {
             baza = new Baza();
             context.setAttribute("baza2", baza);
         }
-*/
+
         if(akcja.equals("login")) {
 
             String login=request.getParameter("log");

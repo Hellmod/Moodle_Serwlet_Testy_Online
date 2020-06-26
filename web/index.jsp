@@ -7,8 +7,6 @@
   <meta charset="UTF-8">
   <title>TI-Kol3</title>
   <link rel="stylesheet" type="text/css" href="style.css"/>
-  <script type="text/javascript" src="skript/skrypt.js"></script>
-  <script type="text/javascript" src="skript/kwadratowe.js"></script>
 </head>
 <jsp:useBean id="uzytkownik" class="ti.model.User" scope="session"/>
 
@@ -23,7 +21,7 @@
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;rejestracja;");
 %>
 
-<body style ="background-color: [[KOLOR]]" onload="funkcje(); zegarek(); setInterval(zegarek, 1000);" >
+<body style ="background-color: [[KOLOR]]" onload="" >
 <div id="kontener">
   <div id="naglowek">
     <jsp:include page="/WEB-INF/widok/naglowek.jsp"/>
