@@ -45,8 +45,14 @@ public class Baza {
 
 	public boolean createTables() {
 		String createUsers = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login varchar(255), password varchar(255), permissions int)";
+		String createTests = "CREATE TABLE IF NOT EXISTS tests (" +
+							 "id		INTEGER PRIMARY KEY AUTOINCREMENT," +
+							 "question	VARCHAR (255)," +
+							 "points	VARCHAR (255));";
+
 		try {
 			stat.execute(createUsers);
+			stat.execute(createTests);
 		} catch (SQLException e) {
 			System.err.println("Blad przy tworzeniu tabeli");
 			e.printStackTrace();
@@ -86,7 +92,6 @@ public class Baza {
 		}
 		return user;
 	}
-
 
 	public List<User> selectUsers() {
 		List<User> users = new LinkedList<User>();
@@ -160,5 +165,19 @@ public class Baza {
 		}
 		return true;
 
+	}
+
+	public boolean addQuestion(String question, int points) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("insert into tests (id,question,points) values (NULL, ?, ?);");
+			prepStmt.setString(1, question);
+			prepStmt.setInt(2, points);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy dodawaniu użytkownika");
+			System.err.println(e.getErrorCode());
+			return false;
+		}
+		return true;
 	}
 }

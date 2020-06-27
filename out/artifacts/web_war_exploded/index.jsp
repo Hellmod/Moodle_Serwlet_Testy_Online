@@ -11,14 +11,12 @@
 <jsp:useBean id="user" class="ti.model.User" scope="session"/>
 
 <% String strona = request.getParameter("strona");
-  if (user.getPermissions()==0)
-    strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;");
-  else if (user.getPermissions()==1)
-    strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;");
+  if (user.getPermissions()==1)
+    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;");
   else if (user.getPermissions()==2)
-    strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;administracja;");
+    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;addTests;");
   else
-    strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;rejestracja;");
+    strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja;");
 %>
 
 <body style ="background-color: [[KOLOR]]" onload="" >
