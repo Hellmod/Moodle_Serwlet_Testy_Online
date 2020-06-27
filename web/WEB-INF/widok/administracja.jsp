@@ -21,16 +21,12 @@
         <input type="submit" value="Nadaj uprawnienia"/>
 
     </form>
-    <form action="RM?akcja=usun" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="login" value="${pracownik.getId()}">
+    <form action="ADMIN?akcja=usun" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="id" value="${pracownik.getId()}">
+        <input type="hidden" name="login" value="${pracownik.getLogin()}">
         <input type="submit" value="Usuń"/>
     </form>
 
-    <form action="RM?akcja=zablokuj" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="login" value="${pracownik.getId()}">
-        <input type="submit" value="Zablokuj"/>
-
-    </form>
 
 </c:forEach>
 <br/>

@@ -61,17 +61,13 @@ public class AdminController extends HttpServlet {
             }
         }
         else if (akcja.equals("usun")) {
+            String id = request.getParameter("id");
             String login = request.getParameter("login");
-            //baza2.usunUzytkownika(login);
+            if(baza.deleteUser(Integer.parseInt(id)))
+                komunikat = "Usunięto użytkownika "+login;
+            else
+                komunikat = "Błąd podczas usuwania użytkownika skontaktuj się z administratorem ";
 
-            komunikat = "Usunięto "+login;
-
-        }
-        else if(akcja.equals("zablokuj")){
-            String login = request.getParameter("login");
-            //baza2.nadajUprawnienia(login,-2);
-
-            komunikat = "Zablokowano"+login;
         }
 
         else{

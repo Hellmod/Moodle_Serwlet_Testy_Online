@@ -147,4 +147,18 @@ public class Baza {
 		}
 		return true;
 	}
+
+	public boolean deleteUser(int id) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("DELETE FROM users  WHERE id = ?;");
+			prepStmt.setInt(1, id);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy usuwaniu użytkownika");
+			System.err.println(e.getErrorCode());
+			return false;
+		}
+		return true;
+
+	}
 }
