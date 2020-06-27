@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
-<html style="background-color: ${applicationScope.kolorTla}">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>TI-Kol3</title>
@@ -14,12 +14,12 @@
   if (user.getPermissions()==1)
     strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;");
   else if (user.getPermissions()==2)
-    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;addTests;");
+    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;addTests;listTests");
   else
     strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja;");
 %>
 
-<body style ="background-color: [[KOLOR]]" onload="" >
+<body>
 <div id="kontener">
   <div id="naglowek">
     <jsp:include page="/WEB-INF/widok/naglowek.jsp"/>

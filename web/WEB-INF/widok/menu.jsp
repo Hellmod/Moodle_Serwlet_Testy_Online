@@ -8,5 +8,6 @@
         ${(user.getPermissions()==1)?'<li><a href="index.jsp?strona=tests">testy</a></li>' : '' }
         ${(user.getPermissions()==2)?'<li><a href="/web_war_exploded/index.jsp?strona=administracja">Administracja</a></li>' : '' }
         ${(user.getPermissions()==2)?'<li><a href="/web_war_exploded/index.jsp?strona=addTests">Dodaj test</a></li>' : '' }
+        ${(user.getPermissions()==2)?'<li><a href="/web_war_exploded/index.jsp?strona=listTests">Lista testów</a></li>' : '' }
     </ul>
 

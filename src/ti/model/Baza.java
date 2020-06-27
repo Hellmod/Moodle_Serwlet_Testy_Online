@@ -118,25 +118,6 @@ public class Baza {
 		return users;
 	}
 
-	public List<User> selectUzytkownik() {
-		List<User> urzytkownicy = new LinkedList<User>();
-		try {
-			ResultSet result = stat.executeQuery("SELECT * FROM users");
-			int id;
-			String login, haslo;
-			while (result.next()) {
-				id = result.getInt("id");
-				login = result.getString("login");
-				haslo = result.getString("password");
-				urzytkownicy.add(new User(id, login, haslo,-1));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return urzytkownicy;
-	}
-
     public boolean loginAvailable(String login) {
 		try {
 			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM users where login=?");
@@ -221,5 +202,19 @@ public class Baza {
 		}
 
 		return -1;
+	}
+
+	public List<String[]> selectTests() {
+		List<String[]> tests = new LinkedList<String[]>();
+		try {
+			ResultSet result = stat.executeQuery("SELECT DISTINCT testId,testName FROM tests");
+			while (result.next()) {
+				tests.add(new String[]{result.getString("testId"), result.getString("testName")});
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return tests;
 	}
 }

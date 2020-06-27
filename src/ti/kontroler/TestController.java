@@ -49,26 +49,25 @@ public class TestController extends HttpServlet {
 
         if (akcja.equals("addTest")) {
             String testName = request.getParameter("testName");
-            String[] question=request.getParameterValues("question");
-            String[] points=request.getParameterValues("points");
+            String[] question = request.getParameterValues("question");
+            String[] points = request.getParameterValues("points");
 
-            String[] answer1=request.getParameterValues("answer1");
-            String[] answer2=request.getParameterValues("answer2");
-            String[] answer3=request.getParameterValues("answer3");
-            String[] answer4=request.getParameterValues("answer4");
+            String[] answer1 = request.getParameterValues("answer1");
+            String[] answer2 = request.getParameterValues("answer2");
+            String[] answer3 = request.getParameterValues("answer3");
+            String[] answer4 = request.getParameterValues("answer4");
 
-            String[] correct1=request.getParameterValues("correct1");
-            String[] correct2=request.getParameterValues("correct2");
-            String[] correct3=request.getParameterValues("correct3");
-            String[] correct4=request.getParameterValues("correct4");
-
+            String[] correct1 = request.getParameterValues("correct1");
+            String[] correct2 = request.getParameterValues("correct2");
+            String[] correct3 = request.getParameterValues("correct3");
+            String[] correct4 = request.getParameterValues("correct4");
 
             if (user.getPermissions() == 2) {
-                if (baza.addQuestion(testName, question, points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4))
+                if (baza.addQuestion(testName, question, points, answer1, answer2, answer3, answer4, correct1, correct2, correct3, correct4))
                     komunikat = "Dodano pytanie";
                 else
                     komunikat = "Błąd podczas dodawanie pytania skontaktuj się z administratorem";
-            }
+            } else komunikat = "Nie masz uprawnień do dodania testu";
         } else {
             komunikat = "Nieprawidłowe wywołanie";
         }
