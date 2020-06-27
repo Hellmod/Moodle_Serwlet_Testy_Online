@@ -5,19 +5,16 @@
 <jsp:useBean id="baza" class="ti.model.Baza" scope="session"></jsp:useBean>
 <%
     List<User> rekordy = baza.selectUsers();
-    System.out.println("Lista uzytkowników:");
     request.setAttribute("rekordy",rekordy);
 
-    for(User k: rekordy)
-        System.out.println(k.getId()+" "+k.getLogin()+" "+k.getPassword()+" "+k.getPermissions());
 %>
 <br/>
 <c:forEach var="pracownik" items="${rekordy}">
-    <form action="RM?akcja=uprawnienia" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="login" value="${pracownik}">
+    <form action="ADMIN?akcja=uprawnienia" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="id" value="${pracownik.getId()}">
         <label>${pracownik.getLogin()}</label>
         <select name="uprawnienia">
-            <option value="0" <c:if test = "${pracownik.getPermissions()==0}">selected</c:if> >Nieaktywny</option>
+            <option value="-2" <c:if test = "${pracownik.getPermissions()>0}">selected</c:if> >Zablokowany</option>
             <option value="1" <c:if test = "${pracownik.getPermissions()==1}">selected</c:if> >Aktywny</option>
             <option value="2" <c:if test = "${pracownik.getPermissions()==2}">selected</c:if> >Administrator</option>
         </select>

@@ -36,13 +36,6 @@ public class RM extends HttpServlet {
 
         if (akcja == null) akcja ="";
 
-
-        User uzytkownik = (User) sesja.getAttribute("uzytkownik");
-        if (uzytkownik == null) {
-            uzytkownik = new User();   // użytkownik
-            sesja.setAttribute("uzytkownik", uzytkownik);
-        }
-
         User user = (User) sesja.getAttribute("user");
         if (user == null) {
             user = new User();   // użytkownik
@@ -71,47 +64,31 @@ public class RM extends HttpServlet {
             komunikat = "Zostałeś prawidłowo zalogowany";
             if(temp !=null) {
                 if(temp.getPermissions()!=-2){
-                    sesja.setAttribute("uzytkownik", temp);
-                    user=temp;
-                }else {
+                    sesja.setAttribute("user", temp);
+                }else
                     komunikat = "Konto zablokowane!";
-                }
+
             }
-            else {
+            else
                 komunikat = "Błędny login lub hasło";
-            }
+
         }
         else if(akcja.equals("ustawienia")){
             String imie = request.getParameter("imie");
             String nazwisko = request.getParameter("nazwisko");
 
-
             if(imie==null) imie="";
             if(nazwisko==null) nazwisko="";
 
-            sesja.setAttribute("uzytkownik", uzytkownik);
+            //sesja.setAttribute("uzytkownik", uzytkownik);
             //System.out.println(sesja.getAttribute("uzytkownik"));
 
             komunikat = "Zmieniono dane";
            // response.sendRedirect("index.jsp");
 
         }
-        else if(akcja.equals("uprawnienia")){
-            String login = request.getParameter("login");
-            String uprawnienia = request.getParameter("uprawnienia");
-
-            komunikat = "Nie można zmienić ustawiań admina";
-            if(login==null) login="";
-            if(uprawnienia==null) uprawnienia="-1";
-
-            if(!login.equals("admin")) {
-                baza2.nadajUprawnienia(login, Integer.parseInt(uprawnienia));
-                context.setAttribute("baza", baza2);
-                komunikat = "Zmieniono dane";
-            }
-        }
         else if(akcja.equals("wyloguj")) {
-            sesja.setAttribute("uzytkownik", new User());
+            sesja.setAttribute("user", new User());
             komunikat = "Zostałeś prawidłowo wylogowany";
        //   response.sendRedirect("index.jsp");
         }
@@ -126,18 +103,6 @@ public class RM extends HttpServlet {
             }
             else
                 komunikat = "Taki login już istnieje!";
-        } else if (akcja.equals("usun")) {
-            String login = request.getParameter("login");
-            baza2.usunUzytkownika(login);
-            context.setAttribute("baza", baza2);
-            komunikat = "Usunięto "+login;
-
-        }
-        else if(akcja.equals("zablokuj")){
-            String login = request.getParameter("login");
-            baza2.nadajUprawnienia(login,-2);
-            context.setAttribute("baza", baza2);
-            komunikat = "Zablokowano"+login;
         }
 
         else{

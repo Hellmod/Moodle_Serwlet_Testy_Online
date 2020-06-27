@@ -6,9 +6,11 @@ public class User {
     private String password = "";
     private int permissions = -1;
 
+    // -2 administrator
     // -1 użytkownik niezalogowany
     // 1 użytkownik zalogowany
     // 2 administrator
+
 
     public User(){
 

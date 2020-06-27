@@ -133,4 +133,18 @@ public class Baza {
 		}
 		return true;
     }
+
+	public boolean setPermissions(int id, int permissions) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("UPDATE users SET permissions = ? WHERE id = ?;");
+			prepStmt.setInt(1, permissions);
+			prepStmt.setInt(2, id);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy aktualizacji użytkownika");
+			System.err.println(e.getErrorCode());
+			return false;
+		}
+		return true;
+	}
 }

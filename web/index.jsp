@@ -8,14 +8,14 @@
   <title>TI-Kol3</title>
   <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
-<jsp:useBean id="uzytkownik" class="ti.model.User" scope="session"/>
+<jsp:useBean id="user" class="ti.model.User" scope="session"/>
 
 <% String strona = request.getParameter("strona");
-  if (uzytkownik.getPermissions()==0)
+  if (user.getPermissions()==0)
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;");
-  else if (uzytkownik.getPermissions()==1)
+  else if (user.getPermissions()==1)
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;");
-  else if (uzytkownik.getPermissions()==2)
+  else if (user.getPermissions()==2)
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;ustawienia;administracja;");
   else
     strona = Narzedzia.parsujStrone(strona, "glowna;kwadratowe;pierwsze;rejestracja;");
