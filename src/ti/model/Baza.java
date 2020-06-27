@@ -47,8 +47,19 @@ public class Baza {
 		String createUsers = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login varchar(255), password varchar(255), permissions int)";
 		String createTests = "CREATE TABLE IF NOT EXISTS tests (" +
 							 "id		INTEGER PRIMARY KEY AUTOINCREMENT," +
+							 "testId	INTEGER," +
+							 "testName	VARCHAR (255)," +
 							 "question	VARCHAR (255)," +
-							 "points	VARCHAR (255));";
+							 "points	VARCHAR (255)," +
+							 "answer1	VARCHAR (255)," +
+							 "answer2	VARCHAR (255)," +
+							 "answer3	VARCHAR (255)," +
+							 "answer4	VARCHAR (255)," +
+							 "correct1	BOOLEAN (255)," +
+							 "correct2	BOOLEAN (255)," +
+							 "correct3	BOOLEAN (255)," +
+							 "correct4	BOOLEAN (255)" +
+							 ");";
 
 		try {
 			stat.execute(createUsers);
@@ -167,17 +178,48 @@ public class Baza {
 
 	}
 
-	public boolean addQuestion(String question, int points) {
+	public boolean addQuestion(String testName, String[] questions, String[] points, String[] answer1, String[] answer2, String[] answer3, String[] answer4, String[] correct1, String[] correct2, String[] correct3, String[] correct4) {
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("insert into tests (id,question,points) values (NULL, ?, ?);");
-			prepStmt.setString(1, question);
-			prepStmt.setInt(2, points);
-			prepStmt.execute();
+			int testId = getLastNumber();
+			if(testId<0)
+				return false;
+			testId++;
+			for(int i =0; i<points.length;i++) {
+				PreparedStatement prepStmt = conn.prepareStatement("insert into tests (id,testId,testName,question,points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4) values (NULL,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				prepStmt.setInt(1, testId);
+				prepStmt.setString(2, testName);
+				prepStmt.setString(3, questions[i]);
+				prepStmt.setString(4, points[i]);
+				prepStmt.setString(5, answer1[i]);
+				prepStmt.setString(6, answer2[i]);
+				prepStmt.setString(7, answer3[i]);
+				prepStmt.setString(8, answer4[i]);
+				prepStmt.setString(9, correct1[i]);
+				prepStmt.setString(10, correct2[i]);
+				prepStmt.setString(11, correct3[i]);
+				prepStmt.setString(12, correct4[i]);
+				prepStmt.execute();
+			}
 		} catch (SQLException e) {
 			System.err.println("Blad przy dodawaniu użytkownika");
 			System.err.println(e.getErrorCode());
 			return false;
 		}
 		return true;
+	}
+
+	private int getLastNumber() {
+		User user=null;
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("select max(testId) as testId  from tests ;");
+			ResultSet result = prepStmt.executeQuery();
+			if(result.next())
+				return result.getInt("testId");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+
+		return -1;
 	}
 }
