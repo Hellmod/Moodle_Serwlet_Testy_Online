@@ -49,6 +49,11 @@ public class TestController extends HttpServlet {
 
         if (akcja.equals("addTest")) {
             String testName = request.getParameter("testName");
+            String odData = request.getParameter("odData");
+            String doData = request.getParameter("doData");
+            String ileMin = request.getParameter("ileMin");
+
+
             String[] question = request.getParameterValues("question");
             String[] points = request.getParameterValues("points");
 
@@ -63,7 +68,7 @@ public class TestController extends HttpServlet {
             String[] correct4 = request.getParameterValues("correct4");
 
             if (user.getPermissions() == 2) {
-                if (baza.addQuestion(testName, question, points, answer1, answer2, answer3, answer4, correct1, correct2, correct3, correct4))
+                if (baza.addQuestion(testName,odData,doData,ileMin, question, points, answer1, answer2, answer3, answer4, correct1, correct2, correct3, correct4))
                     komunikat = "Dodano pytanie";
                 else
                     komunikat = "Błąd podczas dodawanie pytania skontaktuj się z administratorem";

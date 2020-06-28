@@ -1,11 +1,17 @@
 package ti.model;
 
+import java.util.Date;
+
 public class Test {
     private int id;
     private int testId;
     private String testName;
     private String question;
     private int  points;
+
+    private Date odData;
+    private Date doData;
+    private int ileMin;
 
     private String answer1;
     private String answer2;
@@ -16,6 +22,25 @@ public class Test {
     private Boolean correct2;
     private Boolean correct3;
     private Boolean correct4;
+
+    public Test(int id, int testId, String testName, String question, int points, Date odData, Date doData, int ileMin, String answer1, String answer2, String answer3, String answer4, Boolean correct1, Boolean correct2, Boolean correct3, Boolean correct4) {
+        this.id = id;
+        this.testId = testId;
+        this.testName = testName;
+        this.question = question;
+        this.points = points;
+        this.odData = odData;
+        this.doData = doData;
+        this.ileMin = ileMin;
+        this.answer1 = answer1;
+        this.answer2 = answer2;
+        this.answer3 = answer3;
+        this.answer4 = answer4;
+        this.correct1 = correct1;
+        this.correct2 = correct2;
+        this.correct3 = correct3;
+        this.correct4 = correct4;
+    }
 
     public Test(int id, int testId, String testName, String question, int points, String answer1, String answer2, String answer3, String answer4, Boolean correct1, Boolean correct2, Boolean correct3, Boolean correct4) {
         this.id = id;
@@ -135,5 +160,115 @@ public class Test {
 
     public void setCorrect4(Boolean correct4) {
         this.correct4 = correct4;
+    }
+
+    public static final class TestBuilder {
+        private int id;
+        private int testId;
+        private String testName;
+        private String question;
+        private int  points;
+        private Date odData;
+        private Date doData;
+        private int ileMin;
+        private String answer1;
+        private String answer2;
+        private String answer3;
+        private String answer4;
+        private Boolean correct1;
+        private Boolean correct2;
+        private Boolean correct3;
+        private Boolean correct4;
+
+        public TestBuilder() {
+        }
+
+        public static TestBuilder aTest() {
+            return new TestBuilder();
+        }
+
+        public TestBuilder withId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public TestBuilder withTestId(int testId) {
+            this.testId = testId;
+            return this;
+        }
+
+        public TestBuilder withTestName(String testName) {
+            this.testName = testName;
+            return this;
+        }
+
+        public TestBuilder withQuestion(String question) {
+            this.question = question;
+            return this;
+        }
+
+        public TestBuilder withPoints(int points) {
+            this.points = points;
+            return this;
+        }
+
+        public TestBuilder withOdData(Date odData) {
+            this.odData = odData;
+            return this;
+        }
+
+        public TestBuilder withDoData(Date doData) {
+            this.doData = doData;
+            return this;
+        }
+
+        public TestBuilder withIleMin(int ileMin) {
+            this.ileMin = ileMin;
+            return this;
+        }
+
+        public TestBuilder withAnswer1(String answer1) {
+            this.answer1 = answer1;
+            return this;
+        }
+
+        public TestBuilder withAnswer2(String answer2) {
+            this.answer2 = answer2;
+            return this;
+        }
+
+        public TestBuilder withAnswer3(String answer3) {
+            this.answer3 = answer3;
+            return this;
+        }
+
+        public TestBuilder withAnswer4(String answer4) {
+            this.answer4 = answer4;
+            return this;
+        }
+
+        public TestBuilder withCorrect1(Boolean correct1) {
+            this.correct1 = correct1;
+            return this;
+        }
+
+        public TestBuilder withCorrect2(Boolean correct2) {
+            this.correct2 = correct2;
+            return this;
+        }
+
+        public TestBuilder withCorrect3(Boolean correct3) {
+            this.correct3 = correct3;
+            return this;
+        }
+
+        public TestBuilder withCorrect4(Boolean correct4) {
+            this.correct4 = correct4;
+            return this;
+        }
+
+        public Test build() {
+            return new Test(id, testId, testName, question, points, odData, doData, ileMin, answer1, answer2, answer3, answer4, correct1, correct2, correct3, correct4);
+        }
     }
 }

@@ -1,7 +1,10 @@
 package ti.model;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,6 +52,9 @@ public class Baza {
 							 "id		INTEGER PRIMARY KEY AUTOINCREMENT," +
 							 "testId	INTEGER," +
 							 "testName	VARCHAR (255)," +
+							 "odData	DATETIME ," +
+							 "doData	DATETIME ," +
+							 "ileMin	INTEGER ," +
 							 "question	VARCHAR (255)," +
 							 "points	INTEGER," +
 							 "answer1	VARCHAR (255)," +
@@ -164,30 +170,33 @@ public class Baza {
 
 	}
 
-	public boolean addQuestion(String testName, String[] questions, String[] points, String[] answer1, String[] answer2, String[] answer3, String[] answer4, String[] correct1, String[] correct2, String[] correct3, String[] correct4) {
+	public boolean addQuestion(String testName,String odData,String doData,String ileMin,  String[] questions, String[] points, String[] answer1, String[] answer2, String[] answer3, String[] answer4, String[] correct1, String[] correct2, String[] correct3, String[] correct4) {
 		try {
 			int testId = getLastNumber();
 			if(testId<0)
 				return false;
 			testId++;
 			for(int i =0; i<points.length;i++) {
-				PreparedStatement prepStmt = conn.prepareStatement("insert into tests (id,testId,testName,question,points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4) values (NULL,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				PreparedStatement prepStmt = conn.prepareStatement("insert into tests (id,testId,testName,odData,doData,ileMin,question,points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4) values (NULL,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				prepStmt.setInt(1, testId);
 				prepStmt.setString(2, testName);
-				prepStmt.setString(3, questions[i]);
-				prepStmt.setString(4, points[i]);
-				prepStmt.setString(5, answer1[i]);
-				prepStmt.setString(6, answer2[i]);
-				prepStmt.setString(7, answer3[i]);
-				prepStmt.setString(8, answer4[i]);
-				prepStmt.setString(9, correct1[i]);
-				prepStmt.setString(10, correct2[i]);
-				prepStmt.setString(11, correct3[i]);
-				prepStmt.setString(12, correct4[i]);
+				prepStmt.setString(3, odData);
+				prepStmt.setString(4, doData);
+				prepStmt.setString(5, ileMin);
+				prepStmt.setString(6, questions[i]);
+				prepStmt.setString(7, points[i]);
+				prepStmt.setString(8, answer1[i]);
+				prepStmt.setString(9, answer2[i]);
+				prepStmt.setString(10, answer3[i]);
+				prepStmt.setString(11, answer4[i]);
+				prepStmt.setString(12, correct1[i]);
+				prepStmt.setString(13, correct2[i]);
+				prepStmt.setString(14, correct3[i]);
+				prepStmt.setString(15, correct4[i]);
 				prepStmt.execute();
 			}
 		} catch (SQLException e) {
-			System.err.println("Blad przy dodawaniu użytkownika");
+			System.err.println("Blad przy dodawaniu testu");
 			System.err.println(e.getErrorCode());
 			return false;
 		}
@@ -223,17 +232,20 @@ public class Baza {
 		return tests;
 	}
 
-	public List<String[]> selectTests(int userId) {
-		List<String[]> tests = new LinkedList<String[]>();
+	public List<Object[]> selectTests(int userId) {
+		List<Object[]> tests = new LinkedList<Object[]>();
+		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT DISTINCT tests.testId,testName FROM tests JOIN usersTests ON tests.testId=usersTests.testId WHERE userId = ?;");
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT DISTINCT tests.ileMin,tests.doData,tests.odData,tests.testId,testName FROM tests JOIN usersTests ON tests.testId=usersTests.testId WHERE userId = ?;");
 			prepStmt.setInt(1, userId);
 			ResultSet result = prepStmt.executeQuery();
 			while (result.next()) {
-				tests.add(new String[]{result.getString("testId"), result.getString("testName")});
+				Date doData = ft.parse(result.getString("doData"));
+				Date odData = ft.parse(result.getString("odData"));
+				tests.add(new Object[]{result.getInt("testId"), result.getString("testName"),result.getInt("ileMin"),odData,doData});
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException | ParseException e) {
+			e.getMessage();
 			return null;
 		}
 		return tests;
