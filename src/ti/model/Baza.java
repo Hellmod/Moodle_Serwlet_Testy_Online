@@ -60,10 +60,15 @@ public class Baza {
 							 "correct3	BOOLEAN (255)," +
 							 "correct4	BOOLEAN (255)" +
 							 ");";
+		String createUsersTests = "CREATE TABLE IF NOT EXISTS usersTests (" +
+				"testId	INTEGER," +
+				"userId	INTEGER" +
+				");";
 
 		try {
 			stat.execute(createUsers);
 			stat.execute(createTests);
+			stat.execute(createUsersTests);
 		} catch (SQLException e) {
 			System.err.println("Blad przy tworzeniu tabeli");
 			e.printStackTrace();
@@ -216,5 +221,70 @@ public class Baza {
 			return null;
 		}
 		return tests;
+	}
+
+	public String selectTestName(String testId) {
+
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT DISTINCT testName FROM tests where testId=?;");
+			prepStmt.setString(1, testId);
+			ResultSet result = prepStmt.executeQuery();
+			if(result.next())
+				return result.getString("testName");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return "Błąd odczytu";
+
+	}
+
+	public List<String> selectUsersTestsId(String testId) {
+		List<String> tests = new LinkedList<String>();
+		try {
+
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT userId FROM usersTests WHERE testId = ?");
+			prepStmt.setString(1, testId);
+
+			ResultSet result = prepStmt.executeQuery();
+			while (result.next()) {
+				tests.add(result.getString("userId"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return tests;
+	}
+
+	public boolean deleteUsersTestsId(String testId) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("DELETE FROM usersTests  WHERE testId = ?;");
+			prepStmt.setString(1, testId);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy usuwaniu użytkownika");
+			System.err.println(e.getErrorCode());
+			return false;
+		}
+		return true;
+	}
+
+	public boolean addUserToTest(String[] userInTest,String testId) {
+		try {
+			if(!deleteUsersTestsId(testId))
+				throw new SQLException();
+			for(int i =0; i<userInTest.length;i++) {
+				PreparedStatement prepStmt = conn.prepareStatement("insert into usersTests (testId,userId) values (?, ?);");
+				prepStmt.setString(1, testId);
+				prepStmt.setString(2, userInTest[i]);
+				prepStmt.execute();
+			}
+		} catch (SQLException e) {
+			System.err.println("Blad przy dodawaniu użytkownika");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
 	}
 }

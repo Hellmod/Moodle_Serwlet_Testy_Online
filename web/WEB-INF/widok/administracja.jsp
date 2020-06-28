@@ -6,7 +6,6 @@
 <%
     List<User> rekordy = baza.selectUsers();
     request.setAttribute("rekordy",rekordy);
-
 %>
 <br/>
 <c:forEach var="pracownik" items="${rekordy}">

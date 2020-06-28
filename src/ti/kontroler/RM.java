@@ -2,7 +2,6 @@ package ti.kontroler;
 
 import ti.Narzedzia;
 import ti.model.Baza;
-import ti.model.Baza2;
 import ti.model.User;
 
 import javax.servlet.ServletContext;
@@ -42,17 +41,11 @@ public class RM extends HttpServlet {
             sesja.setAttribute("user", user);
         }
 
-        Baza2 baza2 = (Baza2)context.getAttribute("baza");
-        if (baza2 == null) {
-            baza2 = new Baza2();
-            context.setAttribute("baza", baza2);
-        }
-
        // Baza baza = new Baza();
-        Baza baza = (Baza)context.getAttribute("baza2");
+        Baza baza = (Baza)context.getAttribute("baza");
         if (baza == null) {
             baza = new Baza();
-            context.setAttribute("baza2", baza);
+            context.setAttribute("baza", baza);
         }
 
         if(akcja.equals("login")) {

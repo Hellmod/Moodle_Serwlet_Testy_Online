@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>TI-Kol3</title>
+  <title>Moodle</title>
   <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <jsp:useBean id="user" class="ti.model.User" scope="session"/>
@@ -14,7 +14,7 @@
   if (user.getPermissions()==1)
     strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;");
   else if (user.getPermissions()==2)
-    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;addTests;listTests");
+    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;addTests;listTests;addUserToTest");
   else
     strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja;");
 %>

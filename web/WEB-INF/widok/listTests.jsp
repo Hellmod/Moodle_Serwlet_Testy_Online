@@ -10,10 +10,11 @@
 %>
 <br/>
 <c:forEach var="test" items="${rekordy}">
-    <form action="TEST?akcja=uprawnienia" method="post" accept-charset="UTF-8">
+    <form action="TEST?akcja=addUser" method="post" accept-charset="UTF-8">
         <input type="hidden" name="id" value="${test[0]}">
         <label>${test[1]}</label>
-        <input type="submit" value="Dodaj osoby"/>
+        <input type="button" onclick="window.location.href='index.jsp?strona=addUserToTest&testId=${test[0]}'" value="Dodaj osoby"/>
+
     </form>
     <form action="TEST?akcja=usun" method="post" accept-charset="UTF-8">
         <input type="hidden" name="id" value="${test[0]}">

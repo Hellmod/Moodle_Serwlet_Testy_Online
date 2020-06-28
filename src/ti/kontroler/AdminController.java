@@ -40,10 +40,10 @@ public class AdminController extends HttpServlet {
             sesja.setAttribute("user", user);
         }
 
-        Baza baza = (Baza)context.getAttribute("baza2");
+        Baza baza = (Baza)context.getAttribute("baza");
         if (baza == null) {
             baza = new Baza();
-            context.setAttribute("baza2", baza);
+            context.setAttribute("baza", baza);
         }
 
         if(akcja.equals("uprawnienia")){

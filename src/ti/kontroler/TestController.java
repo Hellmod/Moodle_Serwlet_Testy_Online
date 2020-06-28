@@ -40,10 +40,10 @@ public class TestController extends HttpServlet {
             sesja.setAttribute("user", user);
         }
 
-        Baza baza = (Baza) context.getAttribute("baza2");
+        Baza baza = (Baza) context.getAttribute("baza");
         if (baza == null) {
             baza = new Baza();
-            context.setAttribute("baza2", baza);
+            context.setAttribute("baza", baza);
         }
 
 
@@ -68,7 +68,19 @@ public class TestController extends HttpServlet {
                 else
                     komunikat = "Błąd podczas dodawanie pytania skontaktuj się z administratorem";
             } else komunikat = "Nie masz uprawnień do dodania testu";
-        } else {
+        }
+        else if (akcja.equals("addUserToTest")) {
+
+            String[] userInTest = request.getParameterValues("listToadd");
+            if (user.getPermissions() == 2) {
+                String testId = request.getParameter("testId");
+                if (baza.addUserToTest(userInTest,testId ))
+                    komunikat = "Dodano użytkowników do stestu";
+                else
+                    komunikat = "Błąd podczas dodawanie użytkowników skontaktuj się z administratorem";
+            } else komunikat = "Nie masz uprawnień do dodania użytkowników";
+        }
+        else {
             komunikat = "Nieprawidłowe wywołanie";
         }
 
