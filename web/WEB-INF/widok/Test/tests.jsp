@@ -1,6 +1,7 @@
 <%@page import="ti.model.Baza, ti.model.User" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -13,6 +14,8 @@
     SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd', 'kk:mm");
     request.setAttribute("ft",ft);
 
+    Date today = new Date();
+    request.setAttribute("today",today);
 %>
 <br/>
 <c:forEach var="test" items="${rekordy}">
@@ -20,10 +23,10 @@
         <input type="hidden" name="id" value="${test[0]}">
         <label>${test[1]}</label><br/>
         czas na rozwiązanie testu: ${test[2]}<br/>
-        ${ft.format(test[3])}<br/>
-        ${ft.format(test[4])}
-        <input type="button" onclick="window.location.href='index.jsp?strona=Test/addUserToTest&testId=${test[0]}'" value="Dodaj osoby"/>
-
+        Data od: <b>${ft.format(test[3])}</b> do:        <b>${ft.format(test[4])}</b><br/>
+        <c:if test="${ today>test[3] && today<test[4] }">
+            <input type="button" onclick="window.location.href='index.jsp?strona=Test/addUserToTest&testId=${test[0]}'" value="Rozwiąż"/>
+        </c:if>
     </form>
 
 
