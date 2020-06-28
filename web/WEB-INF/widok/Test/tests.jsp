@@ -1,10 +1,13 @@
-<%@page import="ti.model.Baza, java.util.List" %>
+<%@page import="ti.model.Baza, ti.model.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ti.model.Test" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%
     Baza baza = (Baza) pageContext.getServletContext().getAttribute("baza");
-
-    List<String[]> rekordy = baza.selectTests();
+    User user = (User) session.getAttribute("user");
+    List<String[]> rekordy = baza.selectTests(user.getId());
     request.setAttribute("rekordy",rekordy);
 
 %>

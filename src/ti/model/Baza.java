@@ -50,7 +50,7 @@ public class Baza {
 							 "testId	INTEGER," +
 							 "testName	VARCHAR (255)," +
 							 "question	VARCHAR (255)," +
-							 "points	VARCHAR (255)," +
+							 "points	INTEGER," +
 							 "answer1	VARCHAR (255)," +
 							 "answer2	VARCHAR (255)," +
 							 "answer3	VARCHAR (255)," +
@@ -223,6 +223,38 @@ public class Baza {
 		return tests;
 	}
 
+	public List<String[]> selectTests(int userId) {
+		List<String[]> tests = new LinkedList<String[]>();
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT DISTINCT tests.testId,testName FROM tests JOIN usersTests ON tests.testId=usersTests.testId WHERE userId = ?;");
+			prepStmt.setInt(1, userId);
+			ResultSet result = prepStmt.executeQuery();
+			while (result.next()) {
+				tests.add(new String[]{result.getString("testId"), result.getString("testName")});
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return tests;
+	}
+
+	public List<Test> selectTests(int userId, int testId) {
+		List<Test> tests = new LinkedList<Test>();
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE userId = ?;");
+			prepStmt.setInt(1, userId);
+			ResultSet result = prepStmt.executeQuery();
+			while (result.next()) {
+				tests.add(new Test(result.getInt("id"), result.getInt("testId"), result.getString("testName"), result.getString("question"), result.getInt("points"), result.getString("answer1"), result.getString("answer2"), result.getString("answer3"), result.getString("answer4"), result.getBoolean("correct1"), result.getBoolean("correct2"), result.getBoolean("correct3"), result.getBoolean("correct4")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return tests;
+	}
+
 	public String selectTestName(String testId) {
 
 		try {
@@ -287,4 +319,6 @@ public class Baza {
 		}
 		return true;
 	}
+
+
 }
