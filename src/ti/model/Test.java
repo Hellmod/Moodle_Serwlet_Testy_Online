@@ -3,8 +3,9 @@ package ti.model;
 import java.util.Date;
 
 public class Test {
-    private int id;
+    private int questionId;
     private int testId;
+    private int questNum;
     private String testName;
     private String question;
     private int  points;
@@ -23,8 +24,8 @@ public class Test {
     private Boolean correct3;
     private Boolean correct4;
 
-    public Test(int id, int testId, String testName, String question, int points, Date odData, Date doData, int ileMin, String answer1, String answer2, String answer3, String answer4, Boolean correct1, Boolean correct2, Boolean correct3, Boolean correct4) {
-        this.id = id;
+    public Test(int questionId, int testId, String testName, String question, int points, Date odData, Date doData, int ileMin, String answer1, String answer2, String answer3, String answer4, Boolean correct1, Boolean correct2, Boolean correct3, Boolean correct4) {
+        this.questionId = questionId;
         this.testId = testId;
         this.testName = testName;
         this.question = question;
@@ -42,8 +43,8 @@ public class Test {
         this.correct4 = correct4;
     }
 
-    public Test(int id, int testId, String testName, String question, int points, String answer1, String answer2, String answer3, String answer4, Boolean correct1, Boolean correct2, Boolean correct3, Boolean correct4) {
-        this.id = id;
+    public Test(int questionId, int testId, String testName, String question, int points, String answer1, String answer2, String answer3, String answer4, Boolean correct1, Boolean correct2, Boolean correct3, Boolean correct4) {
+        this.questionId = questionId;
         this.testId = testId;
         this.testName = testName;
         this.question = question;
@@ -58,12 +59,12 @@ public class Test {
         this.correct4 = correct4;
     }
 
-    public int getId() {
-        return id;
+    public int getQuestionId() {
+        return questionId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
     public int getTestId() {
@@ -162,9 +163,43 @@ public class Test {
         this.correct4 = correct4;
     }
 
+    public int getQuestNum() {
+        return questNum;
+    }
+
+    public void setQuestNum(int questNum) {
+        this.questNum = questNum;
+    }
+
+    public Date getOdData() {
+        return odData;
+    }
+
+    public void setOdData(Date odData) {
+        this.odData = odData;
+    }
+
+    public Date getDoData() {
+        return doData;
+    }
+
+    public void setDoData(Date doData) {
+        this.doData = doData;
+    }
+
+    public int getIleMin() {
+        return ileMin;
+    }
+
+    public void setIleMin(int ileMin) {
+        this.ileMin = ileMin;
+    }
+
+
     public static final class TestBuilder {
-        private int id;
+        private int questId;
         private int testId;
+        private int questNum;
         private String testName;
         private String question;
         private int  points;
@@ -180,20 +215,25 @@ public class Test {
         private Boolean correct3;
         private Boolean correct4;
 
-        public TestBuilder() {
+        TestBuilder() {
         }
 
         public static TestBuilder aTest() {
             return new TestBuilder();
         }
 
-        public TestBuilder withId(int id) {
-            this.id = id;
+        public TestBuilder withQuestId(int questId) {
+            this.questId = questId;
             return this;
         }
 
         public TestBuilder withTestId(int testId) {
             this.testId = testId;
+            return this;
+        }
+
+        public TestBuilder withQuestNum(int questNum) {
+            this.questNum = questNum;
             return this;
         }
 
@@ -268,7 +308,12 @@ public class Test {
         }
 
         public Test build() {
-            return new Test(id, testId, testName, question, points, odData, doData, ileMin, answer1, answer2, answer3, answer4, correct1, correct2, correct3, correct4);
+            Test test = new Test(questId, testId, testName, question, points, answer1, answer2, answer3, answer4, correct1, correct2, correct3, correct4);
+            test.setQuestNum(questNum);
+            test.setOdData(odData);
+            test.setDoData(doData);
+            test.setIleMin(ileMin);
+            return test;
         }
     }
 }

@@ -8,12 +8,25 @@ body{
     opacity: 0.98;
 }
 
+#komunikat{
+    border-radius: 25px;
+    border: 2px solid;
+    padding: 20px;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+}
+
 #kontener{
     margin: auto;
     font-family: "Rahoma","sans-serif";
     font-size: 10pt;
     width: 90%;
 }
+
+
 
 #naglowek{
     background: #ccc;
@@ -103,6 +116,7 @@ body{
     text-align: center;
     padding: 3px;
 }
+
 
 @media only screen and (max-width: 600px){
     html{

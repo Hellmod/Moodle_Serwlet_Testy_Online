@@ -2,12 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <title>TI-Lab4</title>
-    <link rel="stylesheet" type="text/css" href="styl.css"/>
-    <script type="text/javascript" src="skrypt.js"></script>
-    <script type="text/javascript" src="kwadratowe.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 
-<body style="background-color: [[KOLOR]]">
+<body>
 <div id = "kontener">
     <div id = "komunikat">
         <br/>

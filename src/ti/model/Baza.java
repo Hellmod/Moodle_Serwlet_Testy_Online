@@ -3,10 +3,8 @@ package ti.model;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Baza {
 
@@ -23,7 +21,7 @@ public class Baza {
 			Class.forName(Baza.DRIVER);
 		} catch (ClassNotFoundException e) {
 			System.err.println("Brak sterownika JDBC");
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		try {
@@ -31,7 +29,7 @@ public class Baza {
 			stat = conn.createStatement();
 		} catch (SQLException e) {
 			System.err.println("Problem z otwarciem polaczenia");
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		createTables();
@@ -42,15 +40,16 @@ public class Baza {
 			conn.close();
 		} catch (SQLException e) {
 			System.err.println("Problem z zamknieciem polaczenia");
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
 	public boolean createTables() {
 		String createUsers = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login varchar(255), password varchar(255), permissions int)";
 		String createTests = "CREATE TABLE IF NOT EXISTS tests (" +
-							 "id		INTEGER PRIMARY KEY AUTOINCREMENT," +
+							 "questionId		INTEGER PRIMARY KEY AUTOINCREMENT," +
 							 "testId	INTEGER," +
+							 "quesrNum	INTEGER," +
 							 "testName	VARCHAR (255)," +
 							 "odData	DATETIME ," +
 							 "doData	DATETIME ," +
@@ -68,16 +67,29 @@ public class Baza {
 							 ");";
 		String createUsersTests = "CREATE TABLE IF NOT EXISTS usersTests (" +
 				"testId	INTEGER," +
-				"userId	INTEGER" +
+				"userId	INTEGER," +
+				"startData	DATETIME," +
+				"locked	BOOLEAN," +
+				"started BOOLEAN" +
+				");";
+
+		String createAnswers = "CREATE TABLE IF NOT EXISTS answers (" +
+				"questionId	INTEGER," +
+				"userId	INTEGER," +
+				"answer1	BOOLEAN (255)," +
+				"answer2	BOOLEAN (255)," +
+				"answer3	BOOLEAN (255)," +
+				"answer4	BOOLEAN (255)" +
 				");";
 
 		try {
 			stat.execute(createUsers);
 			stat.execute(createTests);
 			stat.execute(createUsersTests);
+			stat.execute(createAnswers);
 		} catch (SQLException e) {
 			System.err.println("Blad przy tworzeniu tabeli");
-			e.printStackTrace();
+			e.getMessage();
 			return false;
 		}
 		return true;
@@ -92,7 +104,7 @@ public class Baza {
 			prepStmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Blad przy dodawaniu użytkownika");
-			System.err.println(e.getErrorCode());
+			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;
@@ -109,7 +121,7 @@ public class Baza {
 			if(result.next())
 				user = new User(result.getInt("id"), result.getString("login"), result.getString("password"), result.getInt("permissions"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 			return null;
 		}
 		return user;
@@ -123,7 +135,7 @@ public class Baza {
 				users.add(new User(result.getInt("id"), result.getString("login"), result.getString("password"), result.getInt("permissions")));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 			return null;
 		}
 		return users;
@@ -137,7 +149,7 @@ public class Baza {
 			if(result.next())
 				return false;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return true;
     }
@@ -150,7 +162,7 @@ public class Baza {
 			prepStmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Blad przy aktualizacji użytkownika");
-			System.err.println(e.getErrorCode());
+			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;
@@ -163,41 +175,44 @@ public class Baza {
 			prepStmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Blad przy usuwaniu użytkownika");
-			System.err.println(e.getErrorCode());
+			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;
 
 	}
 
-	public boolean addQuestion(String testName,String odData,String doData,String ileMin,  String[] questions, String[] points, String[] answer1, String[] answer2, String[] answer3, String[] answer4, String[] correct1, String[] correct2, String[] correct3, String[] correct4) {
+	public boolean addQuestion(String testName,String odData,String doData,String ileMin,  String[] questions, String points, String[] answer1, String[] answer2, String[] answer3, String[] answer4, String[] correct1, String[] correct2, String[] correct3, String[] correct4) {
 		try {
 			int testId = getLastNumber();
 			if(testId<0)
 				return false;
 			testId++;
-			for(int i =0; i<points.length;i++) {
-				PreparedStatement prepStmt = conn.prepareStatement("insert into tests (id,testId,testName,odData,doData,ileMin,question,points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4) values (NULL,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+			int quesrNum=0;
+			for(int i =0; i<questions.length;i++) {
+				PreparedStatement prepStmt = conn.prepareStatement("insert into tests (questionId,testId,quesrNum,testName,odData,doData,ileMin,question,points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4) values (NULL,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				prepStmt.setInt(1, testId);
-				prepStmt.setString(2, testName);
-				prepStmt.setString(3, odData);
-				prepStmt.setString(4, doData);
-				prepStmt.setString(5, ileMin);
-				prepStmt.setString(6, questions[i]);
-				prepStmt.setString(7, points[i]);
-				prepStmt.setString(8, answer1[i]);
-				prepStmt.setString(9, answer2[i]);
-				prepStmt.setString(10, answer3[i]);
-				prepStmt.setString(11, answer4[i]);
-				prepStmt.setString(12, correct1[i]);
-				prepStmt.setString(13, correct2[i]);
-				prepStmt.setString(14, correct3[i]);
-				prepStmt.setString(15, correct4[i]);
+				prepStmt.setInt(2, quesrNum);
+				prepStmt.setString(3, testName);
+				prepStmt.setString(4, odData);
+				prepStmt.setString(5, doData);
+				prepStmt.setString(6, ileMin);
+				prepStmt.setString(7, questions[i]);
+				prepStmt.setString(8, points);
+				prepStmt.setString(9, answer1[i]);
+				prepStmt.setString(10, answer2[i]);
+				prepStmt.setString(11, answer3[i]);
+				prepStmt.setString(12, answer4[i]);
+				prepStmt.setString(13, correct1[i]);
+				prepStmt.setString(14, correct2[i]);
+				prepStmt.setString(15, correct3[i]);
+				prepStmt.setString(16, correct4[i]);
 				prepStmt.execute();
+				quesrNum++;
 			}
 		} catch (SQLException e) {
 			System.err.println("Blad przy dodawaniu testu");
-			System.err.println(e.getErrorCode());
+			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;
@@ -211,7 +226,7 @@ public class Baza {
 			if(result.next())
 				return result.getInt("testId");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 			return -1;
 		}
 
@@ -226,7 +241,7 @@ public class Baza {
 				tests.add(new String[]{result.getString("testId"), result.getString("testName")});
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 			return null;
 		}
 		return tests;
@@ -235,14 +250,17 @@ public class Baza {
 	public List<Object[]> selectTests(int userId) {
 		List<Object[]> tests = new LinkedList<Object[]>();
 		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+		Random generator = new Random();
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT DISTINCT tests.ileMin,tests.doData,tests.odData,tests.testId,testName FROM tests JOIN usersTests ON tests.testId=usersTests.testId WHERE userId = ?;");
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT COUNT(tests.testId)AS questNum, tests.ileMin,tests.doData,tests.odData,tests.testId,testName FROM tests JOIN usersTests ON tests.testId=usersTests.testId WHERE userId = ? GROUP BY tests.testId;");
+
 			prepStmt.setInt(1, userId);
 			ResultSet result = prepStmt.executeQuery();
 			while (result.next()) {
+				int quesrId = generator.nextInt(result.getInt("questNum"));
 				Date doData = ft.parse(result.getString("doData"));
 				Date odData = ft.parse(result.getString("odData"));
-				tests.add(new Object[]{result.getInt("testId"), result.getString("testName"),result.getInt("ileMin"),odData,doData});
+				tests.add(new Object[]{result.getInt("testId"), result.getString("testName"),result.getInt("ileMin"),odData,doData,quesrId});
 			}
 		} catch (SQLException | ParseException e) {
 			e.getMessage();
@@ -254,14 +272,40 @@ public class Baza {
 	public List<Test> selectTests(int userId, int testId) {
 		List<Test> tests = new LinkedList<Test>();
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE userId = ?;");
-			prepStmt.setInt(1, userId);
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ?;");
+			prepStmt.setInt(1, testId);
 			ResultSet result = prepStmt.executeQuery();
+
+			SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+
 			while (result.next()) {
-				tests.add(new Test(result.getInt("id"), result.getInt("testId"), result.getString("testName"), result.getString("question"), result.getInt("points"), result.getString("answer1"), result.getString("answer2"), result.getString("answer3"), result.getString("answer4"), result.getBoolean("correct1"), result.getBoolean("correct2"), result.getBoolean("correct3"), result.getBoolean("correct4")));
+
+				Date odData = ft.parse(result.getString("odData"));
+				Date doData = ft.parse(result.getString("doData"));
+				tests.add(new Test.TestBuilder()
+						.withTestId(result.getInt("testId"))
+						.withQuestId(result.getInt("questionId"))
+						.withQuestNum(result.getInt("quesrNum"))
+						.withTestName(result.getString("testName"))
+						.withQuestion(result.getString("question"))
+						.withPoints(result.getInt("points"))
+						.withOdData(odData)
+						.withDoData(doData)
+						.withIleMin(result.getInt("ileMin"))
+						.withAnswer1(result.getString("answer1"))
+						.withAnswer2(result.getString("answer2"))
+						.withAnswer3(result.getString("answer3"))
+						.withAnswer4(result.getString("answer4"))
+
+						.withCorrect1(result.getBoolean("correct1"))
+						.withCorrect2(result.getBoolean("correct2"))
+						.withCorrect3(result.getBoolean("correct3"))
+						.withCorrect4(result.getBoolean("correct4"))
+						.build());
+
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException | ParseException e) {
+			e.getMessage();
 			return null;
 		}
 		return tests;
@@ -276,7 +320,7 @@ public class Baza {
 			if(result.next())
 				return result.getString("testName");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 			return null;
 		}
 		return "Błąd odczytu";
@@ -295,7 +339,7 @@ public class Baza {
 				tests.add(result.getString("userId"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 			return null;
 		}
 		return tests;
@@ -308,22 +352,23 @@ public class Baza {
 			prepStmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Blad przy usuwaniu użytkownika");
-			System.err.println(e.getErrorCode());
+			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;
 	}
 
 	public boolean addUserToTest(String[] userInTest,String testId) {
-		try {
+		try {//ToDo nie można zmieniać po dacie rozpoczęcia testu
 			if(!deleteUsersTestsId(testId))
 				throw new SQLException();
-			for(int i =0; i<userInTest.length;i++) {
-				PreparedStatement prepStmt = conn.prepareStatement("insert into usersTests (testId,userId) values (?, ?);");
-				prepStmt.setString(1, testId);
-				prepStmt.setString(2, userInTest[i]);
-				prepStmt.execute();
-			}
+			if(userInTest!=null)
+				for(int i =0; i<userInTest.length;i++) {
+					PreparedStatement prepStmt = conn.prepareStatement("insert into usersTests (testId,userId,locked,started) values (?, ?,False ,False);");
+					prepStmt.setString(1, testId);
+					prepStmt.setString(2, userInTest[i]);
+					prepStmt.execute();
+				}
 		} catch (SQLException e) {
 			System.err.println("Blad przy dodawaniu użytkownika");
 			System.err.println(e.getMessage());
@@ -332,5 +377,177 @@ public class Baza {
 		return true;
 	}
 
+//--------------------------------------------------------------------------------------
+	public Test selectTest(int uesrId, String quesrNum, String testId) {
+		Test test = null;
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests where quesrNum=? and testId=? ;");
+			prepStmt.setString(1, quesrNum);
+			prepStmt.setString(2, testId);
 
+			ResultSet result = prepStmt.executeQuery();
+
+			SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+
+			if(result.next()) {
+				Date odData = ft.parse(result.getString("odData"));
+				Date doData = ft.parse(result.getString("doData"));
+				test = new Test.TestBuilder()
+						.withTestId(result.getInt("testId"))
+						.withQuestId(result.getInt("questionId"))
+						.withQuestNum(result.getInt("quesrNum"))
+						.withTestName(result.getString("testName"))
+						.withQuestion(result.getString("question"))
+						.withPoints(result.getInt("points"))
+						.withOdData(odData)
+						.withDoData(doData)
+						.withIleMin(result.getInt("ileMin"))
+						.withAnswer1(result.getString("answer1"))
+						.withAnswer2(result.getString("answer2"))
+						.withAnswer3(result.getString("answer3"))
+						.withAnswer4(result.getString("answer4"))
+
+						.withCorrect1(result.getBoolean("correct1"))
+						.withCorrect2(result.getBoolean("correct2"))
+						.withCorrect3(result.getBoolean("correct3"))
+						.withCorrect4(result.getBoolean("correct4"))
+						.build();
+			}
+		} catch (SQLException | ParseException e) {
+			e.getMessage();
+			return null;
+		}
+		return test;
+	}
+
+	public boolean addAnswers(Answers answers) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("insert into answers (questionId,userId,answer1,answer2,answer3,answer4) values (?, ?, ?, ?, ?, ?);");
+			prepStmt.setInt(1, answers.getQuestionId());
+			prepStmt.setInt(2, answers.getUserId());
+			prepStmt.setBoolean(3, answers.getAnswer1());
+			prepStmt.setBoolean(4, answers.getAnswer2());
+			prepStmt.setBoolean(5, answers.getAnswer3());
+			prepStmt.setBoolean(6, answers.getAnswer4());
+			
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy dodawaniu odpowiedzi");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	public boolean isPermission(String testId, int userId) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM usersTests where testId=? and userId=? ;");
+			prepStmt.setString(1, testId);
+			prepStmt.setInt(2, userId);
+			ResultSet result = prepStmt.executeQuery();
+
+
+
+
+			if (result.next()) {
+				Boolean locked;
+				Date dateStop = null;
+				if (result.getBoolean("started")) {
+					Test test = selectTest(userId, "0", testId);
+					SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm");
+
+					String startDataString = result.getString("startData");
+					dateStop = ft.parse(startDataString);
+					dateStop.setTime(dateStop.getTime()+(test.getIleMin()*60000));
+
+					locked = result.getBoolean("locked");
+					if (!locked && dateStop.after(new Date()))
+						return true;
+					else {
+						lockTest(testId, userId);
+						return false;
+					}
+				}else{
+					return true;
+				}
+
+			} else
+				return false;
+		} catch (SQLException | ParseException e) {
+			e.getMessage();
+			return false;
+		}
+	}
+
+	public boolean lockTest(String testId, int userId) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("UPDATE usersTests SET locked = True where testId=? and userId=?;");
+			prepStmt.setString(1, testId);
+			prepStmt.setInt(2, userId);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+
+	}
+
+	public boolean setStartDate(String testId, int userId) {
+		Date dNow = new Date( );
+		SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+		String data= ft.format(dNow);
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("UPDATE usersTests SET startData = ?,started=True where testId=? and userId=?;");
+			prepStmt.setString(1, data);
+			prepStmt.setString(2, testId);
+			prepStmt.setInt(3, userId);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	public List<Answers> selectAnswers(int userId, int testId) {
+		List<Answers> tests = new LinkedList<Answers>();
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM answers WHERE userId = ? and questionId IN( SELECT questionId FROM tests WHERE testId = ?)");
+			prepStmt.setInt(1, userId);
+			prepStmt.setInt(2, testId);
+			ResultSet result = prepStmt.executeQuery();
+			while (result.next()) {
+				tests.add(new Answers.AnswersBuilder()
+						.userId(result.getInt("userId"))
+						.questionId(result.getInt("questionId"))
+						.answer1(result.getBoolean("answer1"))
+						.answer2(result.getBoolean("answer2"))
+						.answer3(result.getBoolean("answer3"))
+						.answer4(result.getBoolean("answer4"))
+						.build());
+			}
+		} catch (SQLException e) {
+			e.getMessage();
+			return null;
+		}
+		return tests;
+	}
+
+	public boolean isStarted(String testId, int userId) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM usersTests where testId=? and userId=? ;");
+			prepStmt.setString(1, testId);
+			prepStmt.setInt(2, userId);
+			ResultSet result = prepStmt.executeQuery();
+
+			if (result.next()) {
+				return result.getBoolean("started");
+			} else
+				return false;
+		} catch (SQLException e) {
+			e.getMessage();
+			return false;
+		}
+	}
 }

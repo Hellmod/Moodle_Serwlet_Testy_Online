@@ -1,4 +1,4 @@
-<%@page import="ti.Narzedzia, ti.model.User,ti.model.Baza2" %>
+<%@page import="ti.Narzedzia, ti.model.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="ti.model.Baza" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -16,7 +16,6 @@
     request.setAttribute("testName",testName);
 
     List<String> usersTestsId = baza.selectUsersTestsId(testId);
-    System.out.println(usersTestsId);
     request.setAttribute("usersTestsId",usersTestsId);
 %>
 <br/>

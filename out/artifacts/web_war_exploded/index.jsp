@@ -12,11 +12,11 @@
 
 <% String strona = request.getParameter("strona");
   if (user.getPermissions()==1)
-    strona = Narzedzia.parsujStrone(strona, "glowna;Test/tests;pierwsze;ustawienia;");
+    strona = Narzedzia.parsujStrone(strona, "glowna;Test/tests;pierwsze;ustawienia;Test/solveTest");
   else if (user.getPermissions()==2)
     strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;Test/addTests;Test/listTests;Test/addUserToTest");
   else
-    strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja;");
+    strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja");
 %>
 
 <body>

@@ -8,7 +8,7 @@
 <%
     Baza baza = (Baza) pageContext.getServletContext().getAttribute("baza");
     User user = (User) session.getAttribute("user");
-    List<Object[]> rekordy = baza.selectTests(user.getId());//0-testId 1-testName 2-ileMin 3-odData 4-doData
+    List<Object[]> rekordy = baza.selectTests(user.getId());//0-testId 1-testName 2-ileMin 3-odData 4-doData 5-randomQuestion
     request.setAttribute("rekordy",rekordy);
 
     SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd', 'kk:mm");
@@ -19,17 +19,17 @@
 %>
 <br/>
 <c:forEach var="test" items="${rekordy}">
-    <form action="TEST?akcja=addUser" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="id" value="${test[0]}">
+    <form action="TEST?akcja=startTest" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="testId" value="${test[0]}">
         <label>${test[1]}</label><br/>
         czas na rozwiązanie testu: ${test[2]}<br/>
         Data od: <b>${ft.format(test[3])}</b> do:        <b>${ft.format(test[4])}</b><br/>
-        <c:if test="${ today>test[3] && today<test[4] }">
-            <input type="button" onclick="window.location.href='index.jsp?strona=Test/addUserToTest&testId=${test[0]}'" value="Rozwiąż"/>
+
+        <c:if test="${ today>test[3] && today<test[4] && baza.isPermission(test[0],user.getId()) }">
+            <input type="submit" value="Rozwiąż"/>
+            <input type="button" onclick="window.location.href='index.jsp?strona=Test/solveTest&testId=${test[0]}&quesrNum=${test[5]}'" value="Rozwiąż"/>
         </c:if>
     </form>
-
-
 </c:forEach>
 <br/>
 

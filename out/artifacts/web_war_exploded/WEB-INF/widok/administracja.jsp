@@ -1,9 +1,10 @@
-<%@page import="ti.Narzedzia, ti.model.User,ti.model.Baza2" %>
+<%@page import="ti.model.Baza, ti.model.User" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:useBean id="baza" class="ti.model.Baza" scope="session"></jsp:useBean>
+
 <%
+    Baza baza = (Baza) pageContext.getServletContext().getAttribute("baza");
     List<User> rekordy = baza.selectUsers();
     request.setAttribute("rekordy",rekordy);
 %>
