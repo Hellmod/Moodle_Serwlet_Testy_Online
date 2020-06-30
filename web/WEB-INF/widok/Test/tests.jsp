@@ -26,8 +26,17 @@
         Data od: <b>${ft.format(test[3])}</b> do:        <b>${ft.format(test[4])}</b><br/>
 
         <c:if test="${ today>test[3] && today<test[4] && baza.isPermission(test[0],user.getId()) }">
-            <input type="submit" value="Rozwiąż"/>
             <input type="button" onclick="window.location.href='index.jsp?strona=Test/solveTest&testId=${test[0]}&quesrNum=${test[5]}'" value="Rozwiąż"/>
+        </c:if>
+
+        <c:if test="${ today>test[3] && today<test[4] && baza.isPermission(test[0],user.getId()) }">
+            <input type="submit" value="Rozwiąż"/>
+        </c:if>
+    </form>
+    <form action="TEST?akcja=showResult" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="testId" value="${test[0]}">
+        <c:if test="${today>test[4]}">
+            <input type="submit" value="Pokaż rozwiązanie"/>
         </c:if>
     </form>
 </c:forEach>

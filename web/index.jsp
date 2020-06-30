@@ -11,9 +11,9 @@
 <jsp:useBean id="user" class="ti.model.User" scope="session"/>
 
 <% String strona = request.getParameter("strona");
-  if (user.getPermissions()==1)
-    strona = Narzedzia.parsujStrone(strona, "glowna;Test/tests;pierwsze;ustawienia;Test/solveTest");
-  else if (user.getPermissions()==2)
+  if (user.getPermissions()==1)//User
+    strona = Narzedzia.parsujStrone(strona, "glowna;Test/tests;pierwsze;ustawienia;Test/solveTest;Test/showResult");
+  else if (user.getPermissions()==2)//Admin
     strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;Test/addTests;Test/listTests;Test/addUserToTest");
   else
     strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja");

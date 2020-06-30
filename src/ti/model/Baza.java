@@ -272,7 +272,7 @@ public class Baza {
 	public List<Test> selectTests(int userId, int testId) {
 		List<Test> tests = new LinkedList<Test>();
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ?;");
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ? ORDER BY questionId;");
 			prepStmt.setInt(1, testId);
 			ResultSet result = prepStmt.executeQuery();
 
@@ -297,10 +297,10 @@ public class Baza {
 						.withAnswer3(result.getString("answer3"))
 						.withAnswer4(result.getString("answer4"))
 
-						.withCorrect1(result.getBoolean("correct1"))
-						.withCorrect2(result.getBoolean("correct2"))
-						.withCorrect3(result.getBoolean("correct3"))
-						.withCorrect4(result.getBoolean("correct4"))
+						.withCorrect1(Boolean.parseBoolean(result.getString("correct1")))
+						.withCorrect2(Boolean.parseBoolean(result.getString("correct2")))
+						.withCorrect3(Boolean.parseBoolean(result.getString("correct3")))
+						.withCorrect4(Boolean.parseBoolean(result.getString("correct4")))
 						.build());
 
 			}
@@ -513,7 +513,7 @@ public class Baza {
 	public List<Answers> selectAnswers(int userId, int testId) {
 		List<Answers> tests = new LinkedList<Answers>();
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM answers WHERE userId = ? and questionId IN( SELECT questionId FROM tests WHERE testId = ?)");
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM answers WHERE userId = ? and questionId IN( SELECT questionId FROM tests WHERE testId = ?) ORDER BY questionId");
 			prepStmt.setInt(1, userId);
 			prepStmt.setInt(2, testId);
 			ResultSet result = prepStmt.executeQuery();
@@ -521,10 +521,10 @@ public class Baza {
 				tests.add(new Answers.AnswersBuilder()
 						.userId(result.getInt("userId"))
 						.questionId(result.getInt("questionId"))
-						.answer1(result.getBoolean("answer1"))
-						.answer2(result.getBoolean("answer2"))
-						.answer3(result.getBoolean("answer3"))
-						.answer4(result.getBoolean("answer4"))
+						.answer1(Boolean.parseBoolean(result.getString("answer1")))
+						.answer2(Boolean.parseBoolean(result.getString("answer2")))
+						.answer3(Boolean.parseBoolean(result.getString("answer3")))
+						.answer4(Boolean.parseBoolean(result.getString("answer4")))
 						.build());
 			}
 		} catch (SQLException e) {

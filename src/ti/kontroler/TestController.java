@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -140,6 +141,24 @@ public class TestController extends HttpServlet {
             } else
                 komunikat = "Nie możesz już rozwiązać testu";
 
+        }else if (akcja.equals("showResult")) {
+            String testId = request.getParameter("testId");
+            List<Test> testList= baza.selectTests(user.getId(),Integer.parseInt(testId) );
+            if(testList.isEmpty()) {
+                komunikat = "Błąd skontatuj sie z Administratorem";
+            }else {
+                if(new Date().after(testList.get(0).getDoData())){
+                    List<Answers> answersList = baza.selectAnswers(user.getId(), Integer.parseInt(testId));
+
+                    double points = calculatePoints(testList, answersList);
+                    sesja.setAttribute("points", points);
+                    sesja.setAttribute("testList", testList);
+                    sesja.setAttribute("answersList", answersList);
+                    response.sendRedirect("index.jsp?strona=Test/showResult");
+                }
+                else komunikat = "Nie możesz obejrzeć wyników przed datą końca testu";
+            }
+
         } else {
             komunikat = "Nieprawidłowe wywołanie";
         }
@@ -152,6 +171,33 @@ public class TestController extends HttpServlet {
         out.println(szablon);
         out.close();
 
+    }
+
+    private double calculatePoints(List<Test> testList, List<Answers> answersList) {
+        double question, points,correctAnswers=0;
+        question=testList.size()*4;
+        points=testList.get(0).getPoints();
+        for(int i=0 ;i<testList.size();i++) {
+            if(testList.get(i).getCorrect1()==answersList.get(i).getAnswer1())
+                ;
+        }
+        for (Test test : testList)
+            for (Answers answer : answersList)
+                if (test.getQuestionId() == answer.getQuestionId()) {
+                    if(test.getCorrect1()== answer.getAnswer1())
+                        correctAnswers++;
+                    if(test.getCorrect2()== answer.getAnswer2())
+                        correctAnswers++;
+                    if(test.getCorrect3()== answer.getAnswer3())
+                        correctAnswers++;
+                    if(test.getCorrect4()== answer.getAnswer4())
+                        correctAnswers++;
+                    break;
+                }
+
+        Double temp = correctAnswers/question;
+        points*=temp;
+        return points;
     }
 
     private void deleteAnswerQuestions(List<Test> testList, List<Answers> answersList) {
