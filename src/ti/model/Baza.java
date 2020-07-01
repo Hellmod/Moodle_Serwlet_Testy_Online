@@ -33,6 +33,7 @@ public class Baza {
 		}
 
 		createTables();
+		insertAdmin();
 	}
 
 	public void closeConnection() {
@@ -89,6 +90,24 @@ public class Baza {
 			stat.execute(createAnswers);
 		} catch (SQLException e) {
 			System.err.println("Blad przy tworzeniu tabeli");
+			e.getMessage();
+			return false;
+		}
+		return true;
+	}
+
+	private boolean insertAdmin(){
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("select login from users where login = 'admin';");
+
+			ResultSet result = prepStmt.executeQuery();
+			if(result.next())
+				return true;
+			else {
+				prepStmt = conn.prepareStatement("insert into users (id,login,password,permissions) values (1, 'admin', 'admin', '2');");
+				prepStmt.execute();
+			}
+		} catch (SQLException e) {
 			e.getMessage();
 			return false;
 		}
