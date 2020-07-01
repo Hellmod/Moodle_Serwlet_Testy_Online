@@ -26,7 +26,10 @@ body{
     width: 90%;
 }
 
-
+#questionList .question{
+    margin: 10px;
+    padding: 5px;
+}
 
 #naglowek{
     background: #ccc;

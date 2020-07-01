@@ -1,8 +1,10 @@
 package ti.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Test {
+    public static SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
     private int questionId;
     private int testId;
     private int questNum;
@@ -215,7 +217,7 @@ public class Test {
         private Boolean correct3;
         private Boolean correct4;
 
-        TestBuilder() {
+        public TestBuilder() {
         }
 
         public static TestBuilder aTest() {

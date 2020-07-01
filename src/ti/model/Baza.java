@@ -218,6 +218,40 @@ public class Baza {
 		return true;
 	}
 
+	public boolean addQuestions(List<Test> testList) {
+		try {
+
+			SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+			for(Test test:testList) {
+				PreparedStatement prepStmt = conn.prepareStatement("insert into tests (questionId,testId,quesrNum,testName,odData,doData,ileMin,question,points,answer1,answer2,answer3,answer4,correct1,correct2,correct3,correct4) values (?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				prepStmt.setInt(1, test.getQuestionId());
+				prepStmt.setInt(2, test.getTestId());
+				prepStmt.setInt(3, test.getQuestNum());
+				prepStmt.setString(4, test.getTestName());
+				prepStmt.setString(5, ft.format(test.getOdData()));
+				prepStmt.setString(6, ft.format(test.getDoData()));
+				prepStmt.setInt(7, test.getIleMin());
+				prepStmt.setString(8, test.getQuestion());
+				prepStmt.setInt(9, test.getPoints());
+				prepStmt.setString(10, test.getAnswer1());
+				prepStmt.setString(11, test.getAnswer2());
+				prepStmt.setString(12, test.getAnswer3());
+				prepStmt.setString(13, test.getAnswer4());
+				prepStmt.setString(14, test.getCorrect1().toString());
+				prepStmt.setString(15, test.getCorrect2().toString());
+				prepStmt.setString(16, test.getCorrect3().toString());
+				prepStmt.setString(17, test.getCorrect4().toString());
+				prepStmt.execute();
+
+			}
+		} catch (SQLException e) {
+			System.err.println("Blad przy dodawaniu testu");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
 	private int getLastNumber() {
 		User user=null;
 		try {
@@ -268,11 +302,11 @@ public class Baza {
 		}
 		return tests;
 	}
-/*
+
 	public List<Test> selectQuestrion(int userId, int testId) {
 		List<Test> tests = new LinkedList<Test>();
 		try {
-			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ? and userId = ? ORDER BY questionId;");
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ? ORDER BY questionId;");
 			prepStmt.setInt(1, testId);
 			ResultSet result = prepStmt.executeQuery();
 
@@ -310,7 +344,7 @@ public class Baza {
 		}
 		return tests;
 	}
-*/
+
 	public List<Test> selectQuestrion( int testId) {
 		List<Test> tests = new LinkedList<Test>();
 		try {
@@ -592,4 +626,19 @@ public class Baza {
 			return false;
 		}
 	}
+
+	public boolean deleteTest(String testId) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("DELETE FROM tests WHERE testId = ?;");
+			prepStmt.setString(1, testId);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy usuwaniu użytkownika");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+
 }

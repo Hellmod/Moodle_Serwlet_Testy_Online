@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -77,7 +80,73 @@ public class TestController extends HttpServlet {
                 else
                     komunikat = "Błąd podczas dodawanie pytania skontaktuj się z administratorem";
             } else komunikat = "Nie masz uprawnień do dodania testu";
-        } else if (akcja.equals("addUserToTest")) {
+        }
+        else if (akcja.equals("editTest")) {
+            String testId = request.getParameter("testId");
+
+
+            String testName = request.getParameter("testName");
+            String odData = request.getParameter("odData");
+            String doData = request.getParameter("doData");
+            String ileMin = request.getParameter("ileMin");
+            String points = request.getParameter("points");
+
+            String[] question = request.getParameterValues("question");
+            String[] questionId = request.getParameterValues("questionId");
+
+            String[] answer1 = request.getParameterValues("answer1");
+            String[] answer2 = request.getParameterValues("answer2");
+            String[] answer3 = request.getParameterValues("answer3");
+            String[] answer4 = request.getParameterValues("answer4");
+
+            String[] correct1 = request.getParameterValues("correct1");
+            String[] correct2 = request.getParameterValues("correct2");
+            String[] correct3 = request.getParameterValues("correct3");
+            String[] correct4 = request.getParameterValues("correct4");
+            SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+            if (user.getPermissions() == 2) {
+                List <Test> testList = new LinkedList<>();
+                int quesrNum =0;
+                Date odDataOut = null;
+                Date doDataOut = null;
+                for(int i =0; i<question.length;i++) {
+                    try {
+                        odDataOut = ft.parse(odData);
+                        doDataOut = ft.parse(doData);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    testList.add(new Test.TestBuilder()
+                            .withTestId(Integer.parseInt(testId))
+                            .withQuestId(Integer.parseInt(questionId[i]))
+                            .withQuestNum(quesrNum)
+                            .withTestName(testName)
+                            .withQuestion(question[i])
+                            .withPoints(Integer.parseInt(points))
+                            .withOdData(odDataOut)
+                            .withDoData(doDataOut)
+                            .withIleMin(Integer.parseInt(ileMin))
+                            .withAnswer1(answer1[i])
+                            .withAnswer2(answer2[i])
+                            .withAnswer3(answer3[i])
+                            .withAnswer4(answer4[i])
+                            .withCorrect1(Boolean.parseBoolean(correct1[i]))
+                            .withCorrect2(Boolean.parseBoolean(correct2[i]))
+                            .withCorrect3(Boolean.parseBoolean(correct3[i]))
+                            .withCorrect4(Boolean.parseBoolean(correct4[i]))
+                            .build());
+                    quesrNum++;
+
+                }
+
+                if (baza.deleteTest(testId)&&baza.addQuestions(testList))
+                    komunikat = "Edytowano pytania";
+                else
+                    komunikat = "Błąd podczas edytowania pytań skontaktuj się z administratorem";
+            } else komunikat = "Nie masz uprawnień do dodania testu";
+        }
+        else if (akcja.equals("addUserToTest")) {
 
             String[] userInTest = request.getParameterValues("listToadd");
             if (user.getPermissions() == 2) {
@@ -87,7 +156,8 @@ public class TestController extends HttpServlet {
                 else
                     komunikat = "Błąd podczas dodawanie użytkowników skontaktuj się z administratorem";
             } else komunikat = "Nie masz uprawnień do dodania użytkowników";
-        } else if (akcja.equals("solveTest")) {
+        }
+        else if (akcja.equals("solveTest")) {
             String[] answersTab = request.getParameterValues("answers");
             Test test = (Test) sesja.getAttribute("test");
             Answers answers = new Answers.AnswersBuilder()
@@ -115,7 +185,8 @@ public class TestController extends HttpServlet {
             } else
                 komunikat = "Błąd podczas dodawanie odpowiedzi skontaktuj się z administratorem";
 
-        } else if (akcja.equals("startTest")) {
+        }
+        else if (akcja.equals("startTest")) {
             String testId = request.getParameter("testId");
             if (baza.isPermission(testId, user.getId())) {
                 if (!baza.isStarted(testId, user.getId()))
@@ -141,36 +212,52 @@ public class TestController extends HttpServlet {
             } else
                 komunikat = "Nie możesz już rozwiązać testu";
 
-        }else if (akcja.equals("showResult")) {
+        }
+        else if (akcja.equals("showResult")) {
             String testId = request.getParameter("testId");
-            List<Test> testList= baza.selectQuestrion(Integer.parseInt(testId) );
+            List<Test> testList= baza.selectQuestrion(user.getId(), Integer.parseInt(testId) );
             if(testList.isEmpty()) {
                 komunikat = "Błąd skontatuj sie z Administratorem";
             }else {
                 if(new Date().after(testList.get(0).getDoData())){
                     List<Answers> answersList = baza.selectAnswers(user.getId(), Integer.parseInt(testId));
-
-                    double points = calculatePoints(testList, answersList);
-                    sesja.setAttribute("points", points);
-                    sesja.setAttribute("testList", testList);
-                    sesja.setAttribute("answersList", answersList);
-                    response.sendRedirect("index.jsp?strona=Test/showResult");
+                    if(answersList.isEmpty()){
+                        komunikat = "Nie masz odpowiedzi na ten test";
+                    }else {
+                        double points = calculatePoints(testList, answersList);
+                        sesja.setAttribute("points", points);
+                        sesja.setAttribute("testList", testList);
+                        sesja.setAttribute("answersList", answersList);
+                        response.sendRedirect("index.jsp?strona=Test/showResult");
+                    }
                 }
                 else komunikat = "Nie możesz obejrzeć wyników przed datą końca testu";
             }
 
-        } else if (akcja.equals("edytuj")) {
+        }
+        else if (akcja.equals("edytuj")) {
             String testId = request.getParameter("testId");
             List<Test> testList = baza.selectQuestrion(Integer.parseInt(testId));
 
             if (testList.isEmpty()) {
                 komunikat = "Błąd skontatuj sie z Administratorem";
             } else {
-                request.setAttribute("testList", testList);
+                sesja.setAttribute("testList", testList);
                 response.sendRedirect("index.jsp?strona=Test/editTest");
             }
 
-        }else {
+        }
+        else if (akcja.equals("usun")) {
+            String testId = request.getParameter("testId");
+
+            if (!baza.deleteTest(testId)) {
+                komunikat = "Błąd skontatuj sie z Administratorem";
+            } else {
+                komunikat = "Usunięto test";
+            }
+
+        }
+        else {
             komunikat = "Nieprawidłowe wywołanie";
         }
 
