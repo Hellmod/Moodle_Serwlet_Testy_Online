@@ -6,8 +6,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-${testList.get(0).getQuestion()}
-Wynik: ${points} na możliwych ${testList.get(0).getPoints()}
+${testList.get(0).getQuestion()}<br/>
+Wynik: ${points} na możliwych ${testList.get(0).getPoints()}<br/>
 
 <c:forEach var="test" items="${testList}">
     <c:forEach var="answer" items="${answersList}">
@@ -24,7 +24,7 @@ Wynik: ${points} na możliwych ${testList.get(0).getPoints()}
             <br/><br/>
             Odpowiedź: ${test.getAnswer4()}<br/>
             Poprawna: ${test.getCorrect4()} twoja: ${answer.getAnswer4()} <br/>
-            <br/><br/>
+            <br/><br/><br/><br/>
         </c:if>
     </c:forEach>
 </c:forEach>

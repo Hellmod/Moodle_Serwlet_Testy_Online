@@ -121,7 +121,7 @@ public class TestController extends HttpServlet {
                 if (!baza.isStarted(testId, user.getId()))
                     baza.setStartDate(testId, user.getId());
 
-                List<Test> testList = baza.selectTests(user.getId(), Integer.parseInt(testId));
+                List<Test> testList = baza.selectQuestrion(Integer.parseInt(testId));
                 List<Answers> answersList = baza.selectAnswers(user.getId(), Integer.parseInt(testId));
                 deleteAnswerQuestions(testList, answersList);
                 Collections.shuffle(testList);
@@ -143,7 +143,7 @@ public class TestController extends HttpServlet {
 
         }else if (akcja.equals("showResult")) {
             String testId = request.getParameter("testId");
-            List<Test> testList= baza.selectTests(user.getId(),Integer.parseInt(testId) );
+            List<Test> testList= baza.selectQuestrion(Integer.parseInt(testId) );
             if(testList.isEmpty()) {
                 komunikat = "Błąd skontatuj sie z Administratorem";
             }else {
@@ -159,7 +159,18 @@ public class TestController extends HttpServlet {
                 else komunikat = "Nie możesz obejrzeć wyników przed datą końca testu";
             }
 
-        } else {
+        } else if (akcja.equals("edytuj")) {
+            String testId = request.getParameter("testId");
+            List<Test> testList = baza.selectQuestrion(Integer.parseInt(testId));
+
+            if (testList.isEmpty()) {
+                komunikat = "Błąd skontatuj sie z Administratorem";
+            } else {
+                request.setAttribute("testList", testList);
+                response.sendRedirect("index.jsp?strona=Test/editTest");
+            }
+
+        }else {
             komunikat = "Nieprawidłowe wywołanie";
         }
 

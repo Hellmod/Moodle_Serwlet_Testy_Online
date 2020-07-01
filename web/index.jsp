@@ -14,7 +14,7 @@
   if (user.getPermissions()==1)//User
     strona = Narzedzia.parsujStrone(strona, "glowna;Test/tests;pierwsze;ustawienia;Test/solveTest;Test/showResult");
   else if (user.getPermissions()==2)//Admin
-    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;Test/addTests;Test/listTests;Test/addUserToTest");
+    strona = Narzedzia.parsujStrone(strona, "glowna;tests;pierwsze;ustawienia;administracja;Test/addTests;Test/listTests;Test/addUserToTest;Test/editTest");
   else
     strona = Narzedzia.parsujStrone(strona, "glowna;pierwsze;rejestracja");
 %>

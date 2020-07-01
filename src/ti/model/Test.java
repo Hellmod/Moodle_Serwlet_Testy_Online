@@ -7,12 +7,12 @@ public class Test {
     private int testId;
     private int questNum;
     private String testName;
-    private String question;
     private int  points;
-
     private Date odData;
     private Date doData;
     private int ileMin;
+
+    private String question;
 
     private String answer1;
     private String answer2;

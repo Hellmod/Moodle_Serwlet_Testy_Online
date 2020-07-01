@@ -268,8 +268,50 @@ public class Baza {
 		}
 		return tests;
 	}
+/*
+	public List<Test> selectQuestrion(int userId, int testId) {
+		List<Test> tests = new LinkedList<Test>();
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ? and userId = ? ORDER BY questionId;");
+			prepStmt.setInt(1, testId);
+			ResultSet result = prepStmt.executeQuery();
 
-	public List<Test> selectTests(int userId, int testId) {
+			SimpleDateFormat ft =  new SimpleDateFormat ("yyyy-MM-dd'T'kk:mm");
+
+			while (result.next()) {
+
+				Date odData = ft.parse(result.getString("odData"));
+				Date doData = ft.parse(result.getString("doData"));
+				tests.add(new Test.TestBuilder()
+						.withTestId(result.getInt("testId"))
+						.withQuestId(result.getInt("questionId"))
+						.withQuestNum(result.getInt("quesrNum"))
+						.withTestName(result.getString("testName"))
+						.withQuestion(result.getString("question"))
+						.withPoints(result.getInt("points"))
+						.withOdData(odData)
+						.withDoData(doData)
+						.withIleMin(result.getInt("ileMin"))
+						.withAnswer1(result.getString("answer1"))
+						.withAnswer2(result.getString("answer2"))
+						.withAnswer3(result.getString("answer3"))
+						.withAnswer4(result.getString("answer4"))
+
+						.withCorrect1(Boolean.parseBoolean(result.getString("correct1")))
+						.withCorrect2(Boolean.parseBoolean(result.getString("correct2")))
+						.withCorrect3(Boolean.parseBoolean(result.getString("correct3")))
+						.withCorrect4(Boolean.parseBoolean(result.getString("correct4")))
+						.build());
+
+			}
+		} catch (SQLException | ParseException e) {
+			e.getMessage();
+			return null;
+		}
+		return tests;
+	}
+*/
+	public List<Test> selectQuestrion( int testId) {
 		List<Test> tests = new LinkedList<Test>();
 		try {
 			PreparedStatement prepStmt = conn.prepareStatement("SELECT * FROM tests WHERE testId = ? ORDER BY questionId;");
@@ -425,10 +467,10 @@ public class Baza {
 			PreparedStatement prepStmt = conn.prepareStatement("insert into answers (questionId,userId,answer1,answer2,answer3,answer4) values (?, ?, ?, ?, ?, ?);");
 			prepStmt.setInt(1, answers.getQuestionId());
 			prepStmt.setInt(2, answers.getUserId());
-			prepStmt.setBoolean(3, answers.getAnswer1());
-			prepStmt.setBoolean(4, answers.getAnswer2());
-			prepStmt.setBoolean(5, answers.getAnswer3());
-			prepStmt.setBoolean(6, answers.getAnswer4());
+			prepStmt.setString(3, answers.getAnswer1().toString());
+			prepStmt.setString(4, answers.getAnswer2().toString());
+			prepStmt.setString(5, answers.getAnswer3().toString());
+			prepStmt.setString(6, answers.getAnswer4().toString());
 			
 			prepStmt.execute();
 		} catch (SQLException e) {

@@ -4,7 +4,7 @@
 <%
     Baza baza = (Baza) pageContext.getServletContext().getAttribute("baza");
 
-    List<String[]> rekordy = baza.selectTests();
+    List<String[]> rekordy = baza.selectTests(); //0-testId 1-testName 2-ileMin 3-odData 4-doData 5-randomQuestion
     request.setAttribute("rekordy",rekordy);
 
 %>
@@ -17,11 +17,11 @@
 
     </form>
     <form action="TEST?akcja=usun" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="id" value="${test[0]}">
+        <input type="hidden" name="testId" value="${test[0]}">
         <input type="submit" value="Usuń"/>
     </form>
-    <form action="TEST?akcja=usun" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="id" value="${test[0]}">
+    <form action="TEST?akcja=edytuj" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="testId" value="${test[0]}">
         <input type="submit" value="Edytuj"/>
     </form>
 
