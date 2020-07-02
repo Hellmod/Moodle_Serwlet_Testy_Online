@@ -27,7 +27,7 @@ import java.util.List;
 
 public class TestController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
         response.setCharacterEncoding("utf-8");
 

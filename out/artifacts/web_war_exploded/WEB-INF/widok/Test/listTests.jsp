@@ -10,6 +10,7 @@
 %>
 <br/>
 <c:forEach var="test" items="${rekordy}">
+<div class="listTests">
     <form action="TEST?akcja=addUser" method="post" accept-charset="UTF-8">
         <input type="hidden" name="id" value="${test[0]}">
         <label>${test[1]}</label>
@@ -24,7 +25,8 @@
         <input type="hidden" name="testId" value="${test[0]}">
         <input type="submit" value="Edytuj"/>
     </form>
-
+    <br/>
+</div>
 
 </c:forEach>
 <br/>

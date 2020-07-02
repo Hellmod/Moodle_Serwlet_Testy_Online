@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-@WebServlet(name = "RM", urlPatterns = "/RM")
+@WebServlet(name = "USER", urlPatterns = "/USER")
 
-public class RM extends HttpServlet {
+public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");
@@ -67,18 +67,13 @@ public class RM extends HttpServlet {
 
         }
         else if(akcja.equals("ustawienia")){
-            String imie = request.getParameter("imie");
-            String nazwisko = request.getParameter("nazwisko");
+            String login = request.getParameter("login");
+            String haslo = request.getParameter("haslo");
 
-            if(imie==null) imie="";
-            if(nazwisko==null) nazwisko="";
-
-            //sesja.setAttribute("uzytkownik", uzytkownik);
-            //System.out.println(sesja.getAttribute("uzytkownik"));
-
+            if(login==null) login="";
+            if(haslo==null) haslo="";
+            baza.updateUser(user.getId(),login,haslo);
             komunikat = "Zmieniono dane";
-           // response.sendRedirect("index.jsp");
-
         }
         else if(akcja.equals("wyloguj")) {
             sesja.setAttribute("user", new User());
@@ -97,7 +92,6 @@ public class RM extends HttpServlet {
             else
                 komunikat = "Taki login już istnieje!";
         }
-
         else{
             komunikat = "Nieprawidłowe wywołanie";
         }

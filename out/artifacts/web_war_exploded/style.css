@@ -26,10 +26,7 @@ body{
     width: 90%;
 }
 
-#questionList .question{
-    margin: 10px;
-    padding: 5px;
-}
+
 
 #naglowek{
     background: #ccc;
@@ -91,11 +88,6 @@ body{
     background: #ddd;
     padding: 0 5px 5px  ;
     width: 170px;
-}
-
-#newsy p{
-    background: #eee;
-    border: solid 1px black;
 }
 
 #tresc{
@@ -283,4 +275,23 @@ body{
     #menuToggle input:checked ~#menu ul{
         display: block;
     }
+}
+
+
+.listTests form{
+    float: left;
+    margin: 2px;
+}
+
+.listTests{
+    clear: both;
+}
+
+#questionList .question{
+    margin: 10px;
+    padding: 5px;
+}
+
+#questionList input{
+    margin-left: 2px;
 }

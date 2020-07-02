@@ -16,11 +16,14 @@
 %>
 <br/>
     <form action="TEST?akcja=solveTest" method="post" accept-charset="UTF-8">
+
         ${test.getQuestion()} <br/>
-        ${test.getAnswer1()} <select name="answers"> <option value="True">True</option> <option value="False">False</option></select> <br/>
-        ${test.getAnswer2()} <select name="answers"> <option value="True">True</option> <option value="False">False</option></select> <br/>
-        ${test.getAnswer3()} <select name="answers"> <option value="True">True</option> <option value="False">False</option></select> <br/>
-        ${test.getAnswer4()} <select name="answers"> <option value="True">True</option> <option value="False">False</option></select> <br/>
+        <table>
+            <TR><td>${test.getAnswer1()}</td>   <td><select name="answers"> <option value="True">True</option> <option value="False">False</option></select></td></TR>
+            <TR><td>${test.getAnswer2()}</td>   <td><select name="answers"> <option value="True">True</option> <option value="False">False</option></select></td></TR>
+            <TR><td>${test.getAnswer3()}</td>   <td><select name="answers"> <option value="True">True</option> <option value="False">False</option></select></td></TR>
+            <TR><td>${test.getAnswer4()}</td>   <td><select name="answers"> <option value="True">True</option> <option value="False">False</option></select></td></TR>
+        </table>
         <input type="submit" value="Dalej"/>
     </form>
 <br/>

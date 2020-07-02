@@ -659,5 +659,18 @@ public class Baza {
 		return true;
 	}
 
-
+    public boolean updateUser(int id, String login, String haslo) {
+		try {
+			PreparedStatement prepStmt = conn.prepareStatement("UPDATE users SET login=?,password=? where id=?;");
+			prepStmt.setString(1, login);
+			prepStmt.setString(2, haslo);
+			prepStmt.setInt(3, id);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("Blad przy usuwaniu użytkownika");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+    }
 }

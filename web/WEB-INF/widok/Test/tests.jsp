@@ -26,10 +26,6 @@
         Data od: <b>${ft.format(test[3])}</b> do:        <b>${ft.format(test[4])}</b><br/>
 
         <c:if test="${ today>test[3] && today<test[4] && baza.isPermission(test[0],user.getId()) }">
-            <input type="button" onclick="window.location.href='index.jsp?strona=Test/solveTest&testId=${test[0]}&quesrNum=${test[5]}'" value="Rozwiąż"/>
-        </c:if>
-
-        <c:if test="${ today>test[3] && today<test[4] && baza.isPermission(test[0],user.getId()) }">
             <input type="submit" value="Rozwiąż"/>
         </c:if>
     </form>
@@ -43,4 +39,3 @@
 <br/>
 
 <br/>
-
